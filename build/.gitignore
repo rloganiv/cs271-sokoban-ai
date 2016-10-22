@@ -1,0 +1,5 @@
+# Do not track any files in this folder
+*
+
+# Except for this one
+!.gitignore
