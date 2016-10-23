@@ -10,11 +10,11 @@ SRC = src/
 INCL = -Iinclude/
 
 # Make commands
-board_test: board.o
-	$(CC) $(CFLAGS) $(INCL) -o bin/board_test test/board_test.cpp build/board.o
+state_test: state.o
+	$(CC) $(CFLAGS) $(INCL) -o bin/state_test test/state_test.cpp build/state.o
 
-board.o:
-	$(CC) $(CLFAGS) $(INCL) -c src/board.cpp -o build/board.o
+state.o:
+	$(CC) $(CFLAGS) $(INCL) -c src/state.cpp -o build/state.o
 
 clean:
 	rm -f bin/* build/*
