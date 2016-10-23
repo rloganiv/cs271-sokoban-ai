@@ -1,5 +1,6 @@
 #include "state.h"
 #include <iostream>
+#include <algorithm>
 
 State::State(int w, int h)
 : width(w), height(h)
@@ -15,7 +16,10 @@ State::State(int w, int h)
 State::State(const State& b)
 : width(b.width), height(b.height)
 {
-    tiles = new Tile(*(b.tiles));
+    tiles = new Tile[width * height];
+    for (int i=0; i<width*height; i++){
+        tiles[i] = b.tiles[i];
+    }
     player = b.player;
 }
 
@@ -35,8 +39,8 @@ void State::print() {
     using namespace std;
     Tile old_state = get_tile(player.x, player.y);
     set_tile(player.x, player.y, PLAYER);
-    for (int x=0; x < width; x++) {
-        for (int y=0; y < height; y++) {
+    for (int y=0; y < height; y++) {
+        for (int x=0; x < width; x++) {
             cout << get_tile(x, y) << " ";
         }
         cout << endl;
