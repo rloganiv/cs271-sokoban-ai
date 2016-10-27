@@ -2,8 +2,19 @@
 #include <iostream>
 #include <algorithm>
 
-State::State(int w, int h)
-: width(w), height(h)
+// Declaring and initializing board width and height - defaults to 0
+int State::width;
+int State::height;
+
+// Initializing board width and height based on parameters
+void State::initDimensions(int w, int h)
+{
+	State::width = w;
+	State::height = h;
+}
+
+
+State::State()
 {
     tiles = new Tile[width * height];
     for (int x=0; x < width; x++) {
@@ -14,7 +25,6 @@ State::State(int w, int h)
 }
 
 State::State(const State& b)
-: width(b.width), height(b.height)
 {
     tiles = new Tile[width * height];
     for (int i=0; i<width*height; i++){

@@ -58,10 +58,14 @@ State Problem::init_from_file(std::string filename) {
     ifstream input_file(filename.c_str());
     string line;
 
-    // Get dimensions from first line of file and use to initialize state
+    // Get board dimensions from first line of file
     getline(input_file, line);
     vector<int> dim = str_to_ivec(&line);
-    State* init_state = new State(dim[0], dim[1]);
+    
+    // Initialize  board dimensions
+    State::initDimensions(dim[0], dim[1]);
+    
+    State* init_state = new State();
 
     // Place walls
     getline(input_file, line);

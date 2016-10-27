@@ -18,7 +18,7 @@ struct Coord {
 class State {
     public:
         // Initialize a board of EMPTY tiles
-        State(int w, int h);
+        State();
 
         // Copy constructor
         State(const State& b);
@@ -27,9 +27,9 @@ class State {
         // done
         ~State();
 
-        // State dimensions
-        const int width;
-        const int height;
+        // Board dimensions - same for all states
+        static int width;
+        static int height;
 
         // Player position
         Coord player;
@@ -40,6 +40,9 @@ class State {
 
         // Print function for debugging
         void print();
+	
+	// Function to initialize board dimensions
+	 static void initDimensions(int w, int h);
 
     private:
         // Array of board tiles

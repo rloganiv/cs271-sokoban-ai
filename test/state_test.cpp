@@ -5,11 +5,12 @@ int main() {
     using namespace std;
 
     cout << "Instantiating 8 x 10 board..." << endl;
-    State test_board(8, 10);
+    State::initDimensions(8, 10);
+    State test_board;
 
     cout << "Test - Print board dims" << endl;
-    cout << "   Height: " << test_board.height << endl;
-    cout << "   Width:  " << test_board.width << endl;
+    cout << "   Height: " << State::height << endl;
+    cout << "   Width: " << State::width << endl;
 
     cout << "Test - Getting board tile 0, 0" << endl;
     cout << test_board.get_tile(0, 0) << endl;
