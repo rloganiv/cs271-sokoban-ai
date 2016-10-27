@@ -7,7 +7,7 @@ int main() {
     Problem test_problem;
 
     cout << "Initializing problem from file" << endl;
-    State init_state = test_problem.init_from_file("test_level");
+    State init_state = test_problem.init_from_file("std_suite/screen.1");
 
     cout << "Printing initial state" << endl;
     init_state.print();
@@ -22,12 +22,9 @@ int main() {
     }
     cout << endl;
 
-    cout << "Getting result of moving DOWN" << endl;
-    State result_state = test_problem.result(&init_state, DOWN);
+    cout << "Getting result of moving UP" << endl;
+    State result_state = test_problem.result(&init_state, UP);
     result_state.print();
-
-    cout << "Checking if result state is goal" << endl;
-    cout << test_problem.goal_test(&result_state) << endl;
 
     return 0;
 }
