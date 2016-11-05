@@ -15,11 +15,40 @@
 #include <vector>
 #include "graph.h"
 #include "state.h"
+#include <algorithm>
 
 class ManhattanDist
 {
 public:
     ManhattanDist (Graph &g, Coord goal); //constructor
+    
+    ManhattanDist (const ManhattanDist & other): // Copy constructor
+        graph(other.graph),
+        goal(other.goal),
+        dist(new int[State::width * State::height])
+    {
+        std::copy(other.dist, other.dist + (State::width * State::height), dist);
+    }
+    
+    
+    // Copy swap idiom from StackOverflow
+    friend void swap(ManhattanDist& first, ManhattanDist& second) // nothrow
+    {
+        using std::swap;
+        
+        // by swapping the members of two objects,
+        // the two objects are effectively swapped
+        swap(first.goal, second.goal);
+        swap(first.graph, second.graph);
+        swap(first.dist, second.dist);
+    }
+    
+    ManhattanDist & operator =(ManhattanDist & other){
+        ManhattanDist temp(other);
+        swap(*this, temp);
+        return *this;
+    }
+    
     ~ManhattanDist ();
     
     int getDist(int x, int y) {return dist[State::width * y + x];}
