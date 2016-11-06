@@ -5,7 +5,6 @@
 
 // Placeholder for including heuristic-related files
 
-//#include <string>
 #include <vector>
 #include <stdlib.h>
 #include <iostream>
