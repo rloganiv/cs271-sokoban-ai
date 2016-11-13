@@ -22,3 +22,4 @@ Type `make heuristic_test` to build the *heuristic_test.cpp* example, and then
 
 Type `make bbsolver_test` to build the *bbsolver_test.cpp* example, and then
 `bin/heuristic_test` to run it.
+
