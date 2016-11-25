@@ -4,6 +4,8 @@
 #include "problem.h"
 #include "state.h"
 #include <vector>
+#include <algorithm>
+#include <climits>
 #include "state_space.h"
 
 class ida_star {
