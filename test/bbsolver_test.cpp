@@ -25,7 +25,8 @@ void runTest(int costMatrix[MAX_N][MAX_N], int N){
     cout << "-------------- Begin Test N = " << N << " -------------- " << endl;
     cout << "Cost is " << cost << endl;
     cout << "Assignment size: " << sol.size() << endl;
-    cout << "Check if assignment cost equals min cost: " << solver.costOfAssignment(sol) << " == " << cost << endl;
+    cout << "Check if assignment cost equals min cost: " <<
+        solver.costOfAssignment(sol) << " == " << cost << endl;
     for(unsigned int i = 0; i < sol.size(); i++)
         cout << "Worker " << i << " is assigned to job " << sol[i] << endl;
 
