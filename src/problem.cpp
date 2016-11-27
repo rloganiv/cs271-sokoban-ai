@@ -61,10 +61,10 @@ State Problem::init_from_file(std::string filename) {
     // Get board dimensions from first line of file
     getline(input_file, line);
     vector<int> dim = str_to_ivec(&line);
-    
+
     // Initialize  board dimensions
     State::initDimensions(dim[0], dim[1]);
-    
+
     State* init_state = new State();
 
     // Place walls
@@ -152,7 +152,7 @@ State Problem::result(State *state, Action action) {
     int dx = 0;
     int dy = 0;
     switch (action) {
-        case UP: 
+        case UP:
             dy = -1;
             break;
         case DOWN:
@@ -176,19 +176,29 @@ State Problem::result(State *state, Action action) {
 
         // Move box
         switch (near) {
-            case BOX: 
+            case BOX:
                 result_state.set_tile(x + dx, y + dy, EMPTY);
+                switch (far) {
+                    case EMPTY:
+                        result_state.set_tile(x + 2*dx, y + 2*dy, BOX);
+                        break;
+                    case GOAL:
+                        result_state.set_tile(x + 2*dx, y + 2*dy, GOALBOX);
+                        break;
+                }
+
                 break;
             case GOALBOX:
                 result_state.set_tile(x + dx, y + dy, GOAL);
-                break;
-        }
-        switch (far) {
-            case EMPTY:
-                result_state.set_tile(x + 2*dx, y + 2*dy, BOX); 
-                break;
-            case GOAL:
-                result_state.set_tile(x + 2*dx, y + 2*dy, GOALBOX);
+                switch (far) {
+                    case EMPTY:
+                        result_state.set_tile(x + 2*dx, y + 2*dy, BOX);
+                        break;
+                    case GOAL:
+                        result_state.set_tile(x + 2*dx, y + 2*dy, GOALBOX);
+                        break;
+                }
+
                 break;
         }
     }
