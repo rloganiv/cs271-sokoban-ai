@@ -12,7 +12,7 @@
 #include "manhattandist.h"
 #include <cstdlib>
 #include <iostream>
-
+#include <ctime>
 
 static const int K_PLAYER_CLOSE_TO_BLOCK_BONUS[] = {-12, -10, -8, -4, 0 };
 const int * K::PLAYER_CLOSE_TO_BLOCK_BONUS = K_PLAYER_CLOSE_TO_BLOCK_BONUS;
@@ -210,15 +210,14 @@ int Heuristic::manhattan_dist_score(State &s){
         costMatrix[i] = new int[blocks.size()];
     }
 
-    for(unsigned int i = 0; i < blocks.size(); i++)
+    for(unsigned int i = 0; i < blocks.size(); i++){
         for(unsigned int j = 0; j < blocks.size(); j++){
             costMatrix[i][j] =
               K::STEP_SCALE * block_dist[j].getDist(blocks[i].x, blocks[i].y)
               - K::GOAL_SCORE_SCALE * goal_score(s, init_goals[j]);
             costMatrix[i][j] = std::max(costMatrix[i][j], 0);
         }
-
-
+    }
 
     assign_solver->setCostMatrix(costMatrix, blocks.size());
 
@@ -265,7 +264,7 @@ int Heuristic::player_pos_bonus(State & s){
     return player_pos_bonus;
 }
 
-int Heuristic::evaluate(State &s){
+double Heuristic::evaluate(State &s){
 
     int man_dist_score = manhattan_dist_score(s);
 
@@ -274,10 +273,11 @@ int Heuristic::evaluate(State &s){
 
     int unpushable_score = unpushable_bonus(s);
 
+
     int player_pos_score = player_pos_bonus(s);
 
-    return man_dist_score +
+    return (man_dist_score +
            unpushable_score +
-           player_pos_score;
+           player_pos_score)/(double)K::STEP_SCALE;
 }
 

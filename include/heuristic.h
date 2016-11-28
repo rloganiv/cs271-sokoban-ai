@@ -36,7 +36,7 @@ struct K {
     static const int GOAL_SCORE_SCALE = 2;
 
     // Large value to indicate this is an unsolvable situation
-    static const int IMMOVABLE_BONUS = 100000;
+    static const int IMMOVABLE_BONUS = 10000000;
 
 
     static const int BLOCK_UNPUSHABLE_BONUS = 8;
@@ -66,7 +66,7 @@ public:
 
     /*** This is the main evaluate routine ***/
 
-    int evaluate(State &s);
+    double evaluate(State &s);
 
     /*** ---------------------------------- ***/
 
