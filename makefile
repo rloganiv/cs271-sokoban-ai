@@ -21,12 +21,6 @@ problem.o: state.o
 state.o:
 	$(CC) $(CFLAGS) $(INCL) -c src/state.cpp -o build/state.o
 
-ida_star_test: ida_star.o state.o problem.o
-	$(CC) $(CFLAGS) $(INCL) -o bin/ida_star_test test/ida_star_test.cpp build/ida_star.o build/state.o build/problem.o
-
-ida_star.o:
-	$(CC) $(CFLAGS) $(INCL) -c src/ida_star.cpp -o build/ida_star.o
-
 bbsolver_test: bbsolver.o
 	$(CC) $(CFLAGS) $(INCL) -o bin/bbsolver_test test/bbsolver_test.cpp build/bbsolver.o
 
@@ -44,6 +38,19 @@ manhattandist.o: state.o graph.o
 
 heuristic.o: state.o bbsolver.o graph.o manhattandist.o
 	$(CC) $(CFLAGS) $(INCL) -c src/heuristic.cpp -o build/heuristic.o
+
+ida_star_test: ida_star.o state.o problem.o manhattandist.o graph.o heuristic.o bbsolver.o
+	$(CC) $(CFLAGS) $(INCL) -o bin/ida_star_test test/ida_star_test.cpp build/ida_star.o build/state.o build/problem.o build/manhattandist.o build/graph.o build/heuristic.o build/bbsolver.o
+
+ida_star.o: heuristic.o
+	$(CC) $(CFLAGS) $(INCL) -c src/ida_star.cpp -o build/ida_star.o
+
+
+bfs_test: bfs.o state.o problem.o
+	$(CC) $(CFLAGS) $(INCL) -o bin/bfs_test test/bfs_test.cpp build/bfs.o build/state.o build/problem.o 
+
+bfs.o: 
+	$(CC) $(CFLAGS) $(INCL) -c src/bfs.cpp -o build/bfs.o
 
 clean:
 	rm -f bin/* build/*
