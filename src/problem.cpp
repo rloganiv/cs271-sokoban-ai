@@ -17,37 +17,51 @@ std::vector<int> str_to_ivec(std::string *input_string) {
     return out;
 }
 
+
+/* to_coords
+ *      Converts a vector of ints to a vector of Coords.
+ */
+std::vector<Coord> to_coords(std::vector<int> ivec) {
+    std::vector<Coord> out;
+    for (int i = 1; i < ivec.size(); i=i+2){
+        Coord temp;
+        temp.x = ivec[i+1];
+        temp.y = ivec[i];
+        out.push_back(temp);
+    }
+    return out;
+}
+
 /* place_tiles
  *      Given a line of coordinates from the input file, overwrites the
  *      corresponding tiles in state with val.
  */
-void place_tiles(std::vector<int> coords, State* state, Tile val) {
+void place_tiles(std::vector<Coord> coords, State* state, Tile val) {
     using namespace std;
-    int n = coords[0];
     // Need to handle exceptions for when a box is placed on a goal & vice
     // versa.
     switch (val) {
         case BOX:
-            for (int i=1; i < 2*n; i = i+2) {
-                if (state->get_tile(coords[i+1]-1, coords[i]-1) == GOAL) {
-                    state->set_tile(coords[i+1]-1, coords[i]-1, GOALBOX);
+            for (auto const& coord: coords) {
+                if (state->get_tile(coord.x-1, coord.y-1) == GOAL) {
+                    state->set_tile(coord.x-1, coord.y-1, GOALBOX);
                 } else {
-                    state->set_tile(coords[i+1]-1, coords[i]-1, val);
+                    state->set_tile(coord.x-1, coord.y-1, val);
                 }
             }
             break;
         case GOAL:
-            for (int i=1; i < 2*n; i = i+2) {
-                if (state->get_tile(coords[i+1]-1, coords[i]-1) == BOX) {
-                    state->set_tile(coords[i+1]-1, coords[i]-1, GOALBOX);
+            for (auto const& coord: coords) {
+                if (state->get_tile(coord.x-1, coord.y-1) == BOX) {
+                    state->set_tile(coord.x-1, coord.y-1, GOALBOX);
                 } else {
-                    state->set_tile(coords[i+1]-1, coords[i]-1, val);
+                    state->set_tile(coord.x-1, coord.y-1, val);
                 }
             }
             break;
         default:
-            for (int i=1; i < 2*n; i = i+2) {
-                state->set_tile(coords[i+1]-1, coords[i]-1, val);
+            for (auto const& coord: coords) {
+                state->set_tile(coord.x-1, coord.y-1, val);
             }
     }
 }
@@ -69,17 +83,20 @@ Problem::Problem(std::string filename) {
 
     // Place walls
     getline(input_file, line);
-    vector<int> wall_coords = str_to_ivec(&line);
+    vector<int> walls = str_to_ivec(&line);
+    wall_coords = to_coords(walls);
     place_tiles(wall_coords, temp_state, WALL);
 
     // Place boxes
     getline(input_file, line);
-    vector<int> box_coords = str_to_ivec(&line);
+    vector<int> boxes = str_to_ivec(&line);
+    vector<Coord> box_coords = to_coords(boxes);
     place_tiles(box_coords, temp_state, BOX);
 
     // Place and store goals
     getline(input_file, line);
-    goal_coords = str_to_ivec(&line);
+    vector<int> goals = str_to_ivec(&line);
+    goal_coords = to_coords(goals);
     place_tiles(goal_coords, temp_state, GOAL);
 
     // Get player coordinates
@@ -207,9 +224,8 @@ State Problem::result(State *state, Action action) {
 }
 
 bool Problem::goal_test(State *state) {
-    int n = goal_coords[0];
-    for (int i=1; i < 2*n; i = i+1) {
-        if (state->get_tile(goal_coords[i+1]-1, goal_coords[i]-1) != GOALBOX) {
+    for (auto const& coord: goal_coords) {
+        if (state->get_tile(coord.x-1, coord.y-1) != GOALBOX) {
             return false;
         }
     }

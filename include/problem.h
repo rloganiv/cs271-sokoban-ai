@@ -31,8 +31,10 @@ class Problem {
 
     private:
         State* init_state;
+
         // Vector of goal coordinates. Helps speed up goal test.
-        std::vector<int> goal_coords;
+        std::vector<Coord> wall_coords;
+        std::vector<Coord> goal_coords;
 };
 
 #endif
