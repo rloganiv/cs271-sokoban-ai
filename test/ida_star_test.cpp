@@ -3,14 +3,23 @@
 #include "ida_star.h"
 #include <iostream>
 #include <vector>
+#include "assignmentsolver.h"
+#include "heuristic.h"
+#include "bbsolver.h"
 
 int main() {
     using namespace std;
-    Problem test_problem("courseTestFile");
-
+    //Problem test_problem("courseTestFile");
+    //Problem test_problem("std_suite/screen.1");
+    //Problem test_problem("std_suite/screen.2");
+    //Problem test_problem("addtl_test_suite/testFile2");
+    Problem test_problem("addtl_test_suite/testFile3");
+    //Problem test_problem("addtl_test_suite/microban3");
     cout << "Initializing problem from file" << endl;
     State *init_state;
     init_state = test_problem.get_init_state();
+    BBSolver solver;
+
     cout << "Printing initial state" << endl;
     init_state->print();
 
@@ -21,7 +30,7 @@ int main() {
     std::vector<Action> path_to_goal;
 
     ida_star ida;
-    path_to_goal = ida.ida_begin(*init_state, &test_problem);
+    path_to_goal = ida.ida_begin(*init_state, test_problem, solver);
     cout << "Returned from IDA* " << endl;
 
     if(path_to_goal.empty())
