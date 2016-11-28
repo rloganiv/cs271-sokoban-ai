@@ -15,7 +15,7 @@ enum Action {
 class Problem {
     public:
         // Set initial state and goal coordinates from file
-        State init_from_file(std::string filename);
+        Problem(std::string filename);
 
         // Get a vector of all actions that are valid in a given state
         std::vector<Action> valid_actions(State *state);
@@ -26,7 +26,11 @@ class Problem {
         // Check if given state is a goal state
         bool goal_test(State *state);
 
+        // Getters
+        State* get_init_state();
+
     private:
+        State* init_state;
         // Vector of goal coordinates. Helps speed up goal test.
         std::vector<int> goal_coords;
 };

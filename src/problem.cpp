@@ -52,7 +52,7 @@ void place_tiles(std::vector<int> coords, State* state, Tile val) {
     }
 }
 
-State Problem::init_from_file(std::string filename) {
+Problem::Problem(std::string filename) {
     using namespace std;
 
     ifstream input_file(filename.c_str());
@@ -65,30 +65,30 @@ State Problem::init_from_file(std::string filename) {
     // Initialize  board dimensions
     State::initDimensions(dim[0], dim[1]);
 
-    State* init_state = new State();
+    State* temp_state = new State();
 
     // Place walls
     getline(input_file, line);
     vector<int> wall_coords = str_to_ivec(&line);
-    place_tiles(wall_coords, init_state, WALL);
+    place_tiles(wall_coords, temp_state, WALL);
 
     // Place boxes
     getline(input_file, line);
     vector<int> box_coords = str_to_ivec(&line);
-    place_tiles(box_coords, init_state, BOX);
+    place_tiles(box_coords, temp_state, BOX);
 
     // Place and store goals
     getline(input_file, line);
     goal_coords = str_to_ivec(&line);
-    place_tiles(goal_coords, init_state, GOAL);
+    place_tiles(goal_coords, temp_state, GOAL);
 
     // Get player coordinates
     getline(input_file, line);
     vector<int> player_coords = str_to_ivec(&line);
-    init_state->player.x = player_coords[0] - 1;
-    init_state->player.y = player_coords[1] - 1;
+    temp_state->player.x = player_coords[0] - 1;
+    temp_state->player.y = player_coords[1] - 1;
 
-    return *init_state;
+    init_state = temp_state;
 }
 
 /* can_move
@@ -214,4 +214,8 @@ bool Problem::goal_test(State *state) {
         }
     }
     return true;
+}
+
+State* Problem::get_init_state() {
+    return init_state;
 }
