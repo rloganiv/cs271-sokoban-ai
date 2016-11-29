@@ -27,6 +27,9 @@ class State {
         // done
         ~State();
 
+        // Equivalece operator
+        bool operator==(State& b);
+
         // Board dimensions - same for all states
         static int width;
         static int height;
@@ -40,9 +43,9 @@ class State {
 
         // Print function for debugging
         void print();
-	
+
 	// Function to initialize board dimensions
-	 static void initDimensions(int w, int h);
+	static void initDimensions(int w, int h);
 
     private:
         // Array of board tiles

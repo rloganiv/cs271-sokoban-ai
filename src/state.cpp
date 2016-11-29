@@ -37,6 +37,17 @@ State::~State() {
     delete [] tiles;
 }
 
+bool State::operator==(State& b) {
+    if (player.x != b.player.x) return false;
+    if (player.y != b.player.y) return false;
+    for (int x=0; x < width; x++){
+        for (int y=0; y < height; y++){
+            if (get_tile(x, y) != b.get_tile(x, y)) return false;
+        }
+    }
+    return true;
+}
+
 void State::set_tile(int x, int y, Tile val) {
     tiles[x + width*y] = val;
 }
