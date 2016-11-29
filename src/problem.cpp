@@ -232,6 +232,7 @@ bool Problem::goal_test(State *state) {
     return true;
 }
 
-State* Problem::get_init_state() {
-    return init_state;
-}
+// Getters
+State* Problem::get_init_state(){ return init_state; }
+std::vector<Coord> Problem::get_wall_coords(){ return wall_coords; }
+std::vector<Coord> Problem::get_goal_coords(){ return goal_coords; }

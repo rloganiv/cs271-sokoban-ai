@@ -28,6 +28,9 @@ class Problem {
 
         // Getters
         State* get_init_state();
+        std::vector<Coord> get_wall_coords();
+        std::vector<Coord> get_goal_coords();
+
 
     private:
         State* init_state;
