@@ -32,6 +32,10 @@ int main() {
     cout << "Test - Equivalence operator" << endl;
     cout << (test_board == test_board) <<endl;
 
+    cout << "Test - StateHasher" << endl;
+    StateHasher shash;
+    cout << shash(test_board) << endl;
+
     cout << "Test - Getting player coordinates" << endl;
     cout << "   x: " << test_board.player.x << endl;
     cout << "   y: " << test_board.player.y << endl;

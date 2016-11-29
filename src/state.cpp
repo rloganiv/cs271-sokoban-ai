@@ -52,7 +52,7 @@ void State::set_tile(int x, int y, Tile val) {
     tiles[x + width*y] = val;
 }
 
-Tile State::get_tile(int x, int y) {
+Tile State::get_tile(int x, int y) const {
     return tiles[x + width*y];
 }
 
@@ -67,4 +67,19 @@ void State::print() {
         cout << endl;
     }
     set_tile(player.x, player.y, old_state);
+}
+
+
+size_t StateHasher::operator() (const State &state) const {
+    std::string s;
+    std::stringstream stream;
+    for (int x=0; x < state.width; x++){
+        for (int y=0; y < state.height; y++){
+            stream << state.get_tile(x, y);
+        }
+    }
+    stream << state.player.x;
+    stream << state.player.y;
+    s = stream.str();
+    return std::hash<std::string>()(s);
 }

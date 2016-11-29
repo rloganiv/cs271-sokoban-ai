@@ -1,6 +1,11 @@
 #ifndef STATE_H
 #define STATE_H
 
+#include <cstdlib>
+#include <string>
+#include <sstream>
+#include <iostream>
+
 enum Tile {
     EMPTY,
     WALL,
@@ -39,7 +44,7 @@ class State {
 
         // Tile getters and setters
         void set_tile(int x, int y, Tile val);
-        Tile get_tile(int x, int y);
+        Tile get_tile(int x, int y) const;
 
         // Print function for debugging
         void print();
@@ -50,6 +55,13 @@ class State {
     private:
         // Array of board tiles
         Tile* tiles;
+};
+
+// State hashing function
+//  Convert the tile array and player coords into a string and return the
+//  hash of that string.
+struct StateHasher {
+    size_t operator() (const State &state) const;
 };
 
 #endif
