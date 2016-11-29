@@ -28,25 +28,25 @@ int main() {
 
     cout << "Calling BFS" << endl;
     std::vector<Action> path_to_goal;
-    
+
     bfs b;
     path_to_goal = b.bfs_begin(*init_state, test_problem);
     cout << "Returned from BFS " << endl;
-    
+
     /*if(path_to_goal.empty())
     {
-	cout << " No solution found " << endl;  
+	cout << " No solution found " << endl;
 	return -1;
     }
     else
     {
 	cout << "Number of moves to the goal = " <<path_to_goal.size()<< endl;
     	cout << "Path to goal = ";
-    	
-	// Print the path to the goal state 
+
+	// Print the path to the goal state
     	for(auto it = path_to_goal.begin(); it!= path_to_goal.end(); ++it)
 		cout <<  *it << " ";
- 	cout << endl; 
+ 	cout << endl;
     }*/
     return 0;
 }

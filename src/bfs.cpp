@@ -34,26 +34,26 @@ std::vector<Action> bfs::bfs_begin(State &root, Problem &test_problem)
 {
 	// Reset bound to the heuristic cost to reach the goal from the root
 	unsigned int result;
-	
+
 	// Assign values to the initial state of the state space
 	init_state->current = root;
 	init_state->parent_to_curr = static_cast <Action> (-1);
 	init_state->parent = NULL;
-	init_state->visited = false;	
+	init_state->visited = false;
 	frontier.push(*init_state);
 	//visited.insert(&init_state->current);
 	visited.insert(init_state->current);
 	//State_Space visiting = new State_Space;
-	
+
 	//std::cout << "Check = " << heur.manhattan_dist_score(init_state->current) << std::endl;
 	while(!frontier.empty())
 	{
-		//State_Space *visiting = new State_Space;		
+		//State_Space *visiting = new State_Space;
 		auto visiting = frontier.front();
 		frontier.pop();
 
 		std::cout << "In bfs_begin" << std::endl;
-		//visiting.current.print();	
+		//visiting.current.print();
 
 		std::vector<Action> actions = test_problem.valid_actions(&visiting.current);
 
