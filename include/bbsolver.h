@@ -14,6 +14,7 @@
 #include<vector>
 #include<iostream>
 #include "assignmentsolver.h"
+#include <ctime>
 
 /********************************
 
@@ -35,18 +36,24 @@ public:
 	BBSolver() : AssignmentSolver() {}
 
 	void setCostMatrix(int ** costMatrix, int numWorkers){
-        this->costMatrix = costMatrix;
+        this->originalCostMatrix = costMatrix;
 		this->N = numWorkers;
+		makeAugmentedCostMatrix();
 		result = makeEmptyNode();
 		solve();
+
+		for(int i = 0; i < N; i++){
+            delete [] this->costMatrix[i];
+		}
+		delete [] this->costMatrix;
 	}
 
-	int minCost(){return result.currCost;}
+	int minCost(){return costOfAssignment(result.assignment);}
 
 	inline int costOfAssignment(std::vector<int> assignment){
         int sum = 0;
         for(int i = 0; i < N; i++)
-            sum += costMatrix[i][assignment[i]];
+            sum += originalCostMatrix[i][assignment[i]];
         return sum;
 	}
 
@@ -59,9 +66,38 @@ public:
 private:
 	int N;
 	int ** costMatrix;
+	int ** originalCostMatrix;
     bbNode result;
 
     void solve();
+
+    /*** Subtracts the min from each row and then the min
+         min from each column to form the augmented matrix.
+    ***/
+    inline void makeAugmentedCostMatrix(){
+        costMatrix = new int*[N];
+
+        for(int i = 0; i < N; i++){
+            costMatrix[i] = new int[N];
+            int min = INT_MAX;
+            for(int j = 0; j < N; j++){
+                if(min > originalCostMatrix[i][j])
+                    min = originalCostMatrix[i][j];
+            }
+            for(int j = 0; j < N; j++)
+                costMatrix[i][j] = originalCostMatrix[i][j] - min;
+        }
+
+        for(int j = 0; j < N; j++){
+            int min = INT_MAX;
+            for(int i = 0; i < N; i++){
+                if(min > costMatrix[i][j])
+                    min = costMatrix[i][j];
+            }
+            for(int i = 0; i < N; i++)
+                costMatrix[i][j] -= min;
+        }
+    }
 
 
 	// Computes the lowerbound from a partial assignment
@@ -85,7 +121,7 @@ private:
 
 	inline bbNode h_upper_bound(){
 		bbNode res = makeEmptyNode();
-		for(int i = 0; i < N; i++){
+			for(int i = 0; i < N; i++){
 			int max = INT_MIN;
 			int max_index = -1;
 			std::set<int>::iterator it;
