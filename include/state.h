@@ -32,8 +32,8 @@ class State {
         // done
         ~State();
 
-        // Equivalece operator
-        bool operator==(State& b);
+        // Equivalence operator
+        bool operator==(const State& b) const;
 
         // Board dimensions - same for all states
         static int width;

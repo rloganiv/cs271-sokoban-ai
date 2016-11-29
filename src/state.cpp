@@ -37,7 +37,7 @@ State::~State() {
     delete [] tiles;
 }
 
-bool State::operator==(State& b) {
+bool State::operator==(const State& b) const {
     if (player.x != b.player.x) return false;
     if (player.y != b.player.y) return false;
     for (int x=0; x < width; x++){
