@@ -36,7 +36,7 @@ struct K {
     static const int GOAL_SCORE_SCALE = 2;
 
     // Large value to indicate this is an unsolvable situation
-    static const int IMMOVABLE_BONUS = 10000000;
+    static const int IMMOVABLE_BONUS = 999000999;
 
 
     static const int BLOCK_UNPUSHABLE_BONUS = 8;
@@ -51,7 +51,12 @@ struct K {
 
 } ;
 
+struct ltCoord{
+    bool operator()(const Coord &l, const Coord &r) const{
+        return l.y < r.y || l.y == r.y && l.x < r.x;
+    }
 
+};
 
 class Heuristic {
 public:
@@ -83,7 +88,7 @@ public:
 
     bool is_block_unpushable(State &s, Coord block);
     inline bool is_obstruction(State &s, Tile t) {
-        return t == WALL || t== BOX;
+        return t == WALL || t== BOX || t == GOALBOX;
     }
 
     inline int quick_dist_approx(Coord a, Coord b){
@@ -105,7 +110,9 @@ public:
     void print_unmovability_table();
 
 private:
-    std::vector<ManhattanDist> block_dist;
+
+
+    std::map<Coord, ManhattanDist,  ltCoord> block_dist;
 
     State * init_state;
     AssignmentSolver * assign_solver;

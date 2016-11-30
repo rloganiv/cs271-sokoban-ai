@@ -17,14 +17,14 @@
 class Graph
 {
 public:
-    
+
     Graph(){};
     Graph (State *s); //constructor
     std::vector<Coord> getNeighbors(int x, int y);
-    
+    std::vector<Coord> getNeighborsOfType(Coord c, Tile type);
 private:
     State * state;
-    
+
 };
 
 

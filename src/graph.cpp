@@ -29,6 +29,39 @@ Graph::Graph(State *s)
 
 // getNeighbors then returns table.get( new Coord(x, y))
 
+std::vector<Coord> Graph::getNeighborsOfType(Coord c, Tile type){
+    int x = c.x;
+    int y = c.y;
+    std::vector <Coord> result;
+    Coord up, down, left, right;
+    left.x = x-1;
+    left.y = y;
+    right.x = x+1;
+    right.y = y;
+    up.x = x;
+    up.y = y-1;
+    down.x = x;
+    down.y = y+1;
+
+    if( x > 0 && state->get_tile(x-1, y) == type){
+       result.push_back(left);
+    }
+
+    if(x < State::width - 1 && state->get_tile(x+1, y) == type){
+       result.push_back(right);
+        }
+
+    if(y > 0 && state->get_tile(x, y-1) == type)
+        result.push_back(up);
+
+    if(y < State::height - 1 && state->get_tile(x, y+1) == type)
+        result.push_back(down);
+
+
+       return result;
+
+}
+
 std::vector<Coord> Graph::getNeighbors (int x, int y)
 {
     std::vector <Coord> result;
@@ -41,21 +74,21 @@ std::vector<Coord> Graph::getNeighbors (int x, int y)
     up.y = y-1;
     down.x = x;
     down.y = y+1;
-    
+
     if( x > 0 && state->get_tile(x-1, y) != WALL){
        result.push_back(left);
     }
-       
+
     if(x < State::width - 1 && state->get_tile(x+1, y) != WALL){
        result.push_back(right);
         }
-    
+
     if(y > 0 && state->get_tile(x, y-1) != WALL)
         result.push_back(up);
-    
+
     if(y < State::height - 1 && state->get_tile(x, y+1) != WALL)
         result.push_back(down);
-       
-       
+
+
        return result;
 }

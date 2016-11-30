@@ -13,6 +13,11 @@
 #include <cstdlib>
 #include <iostream>
 #include <ctime>
+#include <set>
+#include <vector>
+#include <queue>
+#include <functional>
+#include <utility>
 
 static const int K_PLAYER_CLOSE_TO_BLOCK_BONUS[] = {-12, -10, -8, -4, 0 };
 const int * K::PLAYER_CLOSE_TO_BLOCK_BONUS = K_PLAYER_CLOSE_TO_BLOCK_BONUS;
@@ -22,17 +27,21 @@ Heuristic :: Heuristic (State * s, AssignmentSolver * assign_solver)
     init_state = s;
     this->assign_solver = assign_solver;
     init_goals = get_locations(*init_state, GOAL);
+    std::vector<Coord> goalboxes = get_locations(*init_state, GOALBOX);
+    init_goals.insert(init_goals.end(), goalboxes.begin(), goalboxes.end());
+
     unmovabilty_default = init_goals.size();
-    block_dist.reserve(init_goals.size());
 
     for(unsigned int i = 0; i < init_goals.size(); i++)
     {
         Graph g(init_state);
         graph = g;
-        ManhattanDist d(graph, init_goals[i]);  //assumes the ordering of the goals is consistent
-        block_dist.push_back(d);
+        ManhattanDist d(graph, init_goals[i]);
+        block_dist.insert(std::make_pair(init_goals[i], d));
 
     }
+
+
 
     gen_um_deg();
 
@@ -95,8 +104,6 @@ void Heuristic::gen_um_deg_ex(State &s, int degree){
 */
 
 bool Heuristic::is_block_unpushable(State &s, Coord block){
-    if (is_wall_unpushable(s, block))
-        return false;
 
     int x = block.x;
     int y = block.y;
@@ -148,10 +155,72 @@ int Heuristic::unpushable_bonus(State &s){
             block_unpushable_count++;
     }
 
-    if( wall_unpushable_count > 0) return K::IMMOVABLE_BONUS;
+    std::set<Coord, ltCoord> free_blocks(blocks.begin(), blocks.end());
+    bool unpushable_construction = false;
+
+    while(!free_blocks.empty()){
+        std::set<Coord, ltCoord> workingSet;
+        std::queue<Coord> processQueue;
+
+        auto it = free_blocks.begin();
+        workingSet.insert(*it);
+        processQueue.push(*it);
+        free_blocks.erase(it);
+
+        while(!processQueue.empty()){
+            Coord c = processQueue.front();
+            processQueue.pop();
+
+            std::vector<Coord> neighborBoxes = graph.getNeighborsOfType(c, BOX);
+            std::vector<Coord> neighborGoals = graph.getNeighborsOfType(c, GOALBOX);
+
+            for(auto box : neighborBoxes){
+                auto it_neighbor = free_blocks.find(box);
+                auto it_w = workingSet.find(box);
+                if(it_neighbor != free_blocks.end())
+                {
+                    free_blocks.erase(it_neighbor);
+                    if(it_w == workingSet.end()){
+                        workingSet.insert(box);
+                        processQueue.push(box);
+                    }
+
+                }
+            }
+
+            for(auto goalbox : neighborGoals){
+                auto it_w = workingSet.find(goalbox);
+                if(it_w == workingSet.end()){
+                    workingSet.insert(goalbox);
+                    processQueue.push(goalbox);
+                }
+            }
+        }
+
+        int bup_count = 0;
+        for(auto item: workingSet){
+            if(is_block_unpushable(s,item))
+                bup_count++;
+        }
+
+        if(bup_count == workingSet.size() && bup_count > 1)
+        {
+            unpushable_construction = true;
+            /*
+            std::cout << "Found an unpushable construction." << std::endl;
+            for(auto item: workingSet){
+                std::cout << "x=" << item.x << " y=" << item.y << std::endl;
+            }
+            s.print(); */
+            break;
+        }
+    }
+
+    if( wall_unpushable_count > 0 || unpushable_construction) return K::IMMOVABLE_BONUS;
     if( block_unpushable_count > 0) return K::BLOCK_UNPUSHABLE_BONUS;
     return 0;
 }
+
 
 int Heuristic::next_to_block_bonus(State &s){
     Coord player = s.player;
@@ -204,18 +273,25 @@ std::vector<Coord> Heuristic::get_locations( State &s, Tile type){
 *********************************************/
 int Heuristic::manhattan_dist_score(State &s){
     std::vector<Coord> blocks = get_locations(s, BOX);
+    std::vector<Coord> goals = get_locations(s, GOAL);
 
     int ** costMatrix = new int *[blocks.size()];
     for(unsigned int i = 0; i < blocks.size(); i++){
         costMatrix[i] = new int[blocks.size()];
     }
 
+    int size = blocks.size();
+    std::vector<Coord> goalboxes = get_locations(s, GOALBOX);
+    int gsize = goalboxes.size();
+
     for(unsigned int i = 0; i < blocks.size(); i++){
-        for(unsigned int j = 0; j < blocks.size(); j++){
+        for(unsigned int j = 0; j < goals.size(); j++){
             costMatrix[i][j] =
-              K::STEP_SCALE * block_dist[j].getDist(blocks[i].x, blocks[i].y)
-              - K::GOAL_SCORE_SCALE * goal_score(s, init_goals[j]);
+              K::STEP_SCALE * block_dist.at(goals[j]) .getDist(blocks[i].x, blocks[i].y)
+              - K::GOAL_SCORE_SCALE * goal_score(s, goals[j]);
+
             costMatrix[i][j] = std::max(costMatrix[i][j], 0);
+
         }
     }
 
@@ -241,6 +317,7 @@ void Heuristic::print_unmovability_table(){
 }
 
 int Heuristic::player_to_block_dist(State &s){
+
     std::vector<Coord> blocks = get_locations(s, BOX);
     int min = INT_MAX;
     for(unsigned int i = 0; i < blocks.size(); i++){
