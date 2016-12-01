@@ -21,7 +21,7 @@ public:
     Graph(){};
     Graph (State *s); //constructor
     std::vector<Coord> getNeighbors(int x, int y);
-    std::vector<Coord> getNeighborsOfType(Coord c, Tile type);
+    std::vector<Coord> getNeighborsOfType(State *s, Coord c, Tile type);
 private:
     State * state;
 

@@ -29,7 +29,7 @@ Graph::Graph(State *s)
 
 // getNeighbors then returns table.get( new Coord(x, y))
 
-std::vector<Coord> Graph::getNeighborsOfType(Coord c, Tile type){
+std::vector<Coord> Graph::getNeighborsOfType(State *state, Coord c, Tile type){
     int x = c.x;
     int y = c.y;
     std::vector <Coord> result;

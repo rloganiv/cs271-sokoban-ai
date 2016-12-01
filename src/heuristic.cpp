@@ -30,7 +30,7 @@ Heuristic :: Heuristic (State * s, AssignmentSolver * assign_solver)
     std::vector<Coord> goalboxes = get_locations(*init_state, GOALBOX);
     init_goals.insert(init_goals.end(), goalboxes.begin(), goalboxes.end());
 
-    unmovabilty_default = init_goals.size();
+    unmovabilty_default = (int)init_goals.size();
 
     for(unsigned int i = 0; i < init_goals.size(); i++)
     {
@@ -171,8 +171,8 @@ int Heuristic::unpushable_bonus(State &s){
             Coord c = processQueue.front();
             processQueue.pop();
 
-            std::vector<Coord> neighborBoxes = graph.getNeighborsOfType(c, BOX);
-            std::vector<Coord> neighborGoals = graph.getNeighborsOfType(c, GOALBOX);
+            std::vector<Coord> neighborBoxes = graph.getNeighborsOfType(&s, c, BOX);
+            std::vector<Coord> neighborGoals = graph.getNeighborsOfType(&s, c, GOALBOX);
 
             for(auto box : neighborBoxes){
                 auto it_neighbor = free_blocks.find(box);
@@ -206,12 +206,6 @@ int Heuristic::unpushable_bonus(State &s){
         if(bup_count == workingSet.size() && bup_count > 1)
         {
             unpushable_construction = true;
-            /*
-            std::cout << "Found an unpushable construction." << std::endl;
-            for(auto item: workingSet){
-                std::cout << "x=" << item.x << " y=" << item.y << std::endl;
-            }
-            s.print(); */
             break;
         }
     }
@@ -280,9 +274,7 @@ int Heuristic::manhattan_dist_score(State &s){
         costMatrix[i] = new int[blocks.size()];
     }
 
-    int size = blocks.size();
     std::vector<Coord> goalboxes = get_locations(s, GOALBOX);
-    int gsize = goalboxes.size();
 
     for(unsigned int i = 0; i < blocks.size(); i++){
         for(unsigned int j = 0; j < goals.size(); j++){
@@ -295,7 +287,7 @@ int Heuristic::manhattan_dist_score(State &s){
         }
     }
 
-    assign_solver->setCostMatrix(costMatrix, blocks.size());
+    assign_solver->setCostMatrix(costMatrix, (int)blocks.size());
 
     int result = assign_solver->minCost();
 
