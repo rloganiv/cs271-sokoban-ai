@@ -75,7 +75,6 @@ public:
 
     /*** ---------------------------------- ***/
 
-    int next_to_block_bonus(State &s);
     int unpushable_bonus(State &s);
 
     int player_pos_bonus(State &s);

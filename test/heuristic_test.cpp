@@ -32,8 +32,8 @@ void runTest(string testfile){
     cout << "Unpushable blocks score: " << h.unpushable_bonus(*init_state) << endl;
     cout << "Eval score = (man_dist + player_pos + unpushable)/scale_step = " << h.evaluate(*init_state) << endl;
     
-    cout << "Move up" << endl;
-    State s1 = test_problem.result(init_state, UP);
+    cout << "Move down" << endl;
+    State s1 = test_problem.result(init_state, DOWN);
     s1.print();
     cout << "Goal score: " << h.goal_score(s1, h.make_coord(1,3)) << endl;
     cout << "Manhattan Dist score: " << h.manhattan_dist_score(s1) << endl;

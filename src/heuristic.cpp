@@ -216,20 +216,6 @@ int Heuristic::unpushable_bonus(State &s){
 }
 
 
-int Heuristic::next_to_block_bonus(State &s){
-    Coord player = s.player;
-    std::vector<Coord> neighbors = graph.getNeighbors(player.x, player.y);
-
-    for(unsigned int i = 0; i < neighbors.size(); i++){
-        Coord n = neighbors[i];
-
-        if(s.get_tile(n.x, n.y)== BOX)
-            return K::NEXT_TO_BLOCK_BONUS;
-    }
-
-    return 0;
-}
-
 int Heuristic::goal_score(State &s, Coord goal){
     // If the goal is occupied, return 0;
     if(s.get_tile(goal.x, goal.y) == GOALBOX)
