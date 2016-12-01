@@ -9,11 +9,11 @@
 
 int main() {
     using namespace std;
-    //Problem test_problem("courseTestFile");
+    Problem test_problem("courseTestFile");
     //Problem test_problem("std_suite/screen.1");
     //Problem test_problem("std_suite/screen.2");
     //Problem test_problem("addtl_test_suite/testFile2");
-    Problem test_problem("addtl_test_suite/testFile3");
+    //Problem test_problem("addtl_test_suite/testFile3");
     //Problem test_problem("addtl_test_suite/microban3");
     cout << "Initializing problem from file" << endl;
     State *init_state;

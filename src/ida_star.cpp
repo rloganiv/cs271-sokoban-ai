@@ -36,7 +36,7 @@ std::vector<Action> ida_star::ida_begin(State &root, Problem &test_problem, Assi
 {
 	// Reset bound to the heuristic cost to reach the goal from the root
 	Heuristic heur(&root, &solver);
-	bound = heur.evaluate(root);
+	bound = heur.manhattan_dist_score(root);
 	unsigned int result;
 	
 	// Assign values to the initial state of the state space
@@ -75,41 +75,16 @@ std::vector<Action> ida_star::ida_begin(State &root, Problem &test_problem, Assi
 	}
 }
 
-// Generate resultant states from making all valid actions from current state
-void ida_star::generate_successors(State_Space *state, Problem &test_problem, std::vector<State_Space>& successors)
-{
-	using namespace std;
-
-	// Get valid actions from current state
-	std::vector<Action> actions = test_problem.valid_actions(&state->current);
-	std::vector<State_Space*> gen_successors;
-	
-	std::cout << "In successors" << std::endl;
-	for(std::vector<Action>::iterator it = actions.begin(); it!=actions.end(); ++it)
-	{
-		State_Space *next = new State_Space;	
-		
-		// Get and store the successors of current state
-		const State &s = test_problem.result(&state->current, *it);
-		next->current = s;
-		next->parent_to_curr = *it;
-		next->parent = state;
-		// Check if state is the goal and store it
-		if(test_problem.goal_test(&next->current))
-        		goal = next; 
-		successors.push_back(*next);
-				
-	}
-	//return gen_successors;	
-}
 
 unsigned int ida_star::search(State_Space *state, unsigned int g, Problem &test_problem, Heuristic &heur)
 {
 	// Calculate f value of the state
 	//unsigned int f = g + h(state->current, g); // Naive heuristic
-	unsigned int f = g + heur.evaluate(state->current); // Manhattan heuristic
+	//unsigned int f = g + heur.evaluate(state->current); // Manhattan heuristic
+	unsigned int f = g + heur.manhattan_dist_score(state->current);
 	//unsigned int f = g; // UCS
  	
+	//std::cout<<"heuristic in search = "<<heur.manhattan_dist_score(state->current)<<"; f = "<<f<<std::endl;
 	// Return f if f value is > cutoff bound
 	if(f > bound)
 		return f;
@@ -136,7 +111,7 @@ unsigned int ida_star::search(State_Space *state, unsigned int g, Problem &test_
                 next->parent = state;
                 if(test_problem.goal_test(&next->current))
                         goal = next;
-		temp_result = search(next, (g+100), test_problem, heur);
+		temp_result = search(next, (g+1), test_problem, heur);
 	        if(temp_result == 0) // Reached goal state
                    	return 0;
 	        if(temp_result < min) // Update bound

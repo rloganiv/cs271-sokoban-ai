@@ -25,10 +25,6 @@ class ida_star {
 		// Recursive search from the successors of each state
 		unsigned int search(State_Space *state, unsigned int g, Problem &test_problem, Heuristic &heur);
 		
-		// Generate successors of current state
-		//std::vector<State_Space> generate_successors(State_Space *state, Problem &test_problem);
-		void generate_successors(State_Space *state, Problem &test_problem, std::vector<State_Space>& successors);
-
 		// Store the Initial state and Goal state
 		State_Space *init_state, *goal;
 		
