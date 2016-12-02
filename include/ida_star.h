@@ -31,6 +31,9 @@ class ida_star {
 		// Store the set of moves to the goal
 		std::vector<Action> path_to_goal;
 		
+		// Keep track of visited states
+		std::unordered_set<State, StateHasher> visited;
+		
 };
 
 #endif

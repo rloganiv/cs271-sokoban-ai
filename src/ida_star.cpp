@@ -5,7 +5,6 @@
 #include "heuristic.h"
 //#include "bbsolver.h"
 //#include "assignmentsolver.h"
-
 #include <vector>
 #include <stdlib.h>
 #include <iostream>
@@ -44,11 +43,14 @@ std::vector<Action> ida_star::ida_begin(State &root, Problem &test_problem, Assi
 	init_state->parent_to_curr = static_cast <Action> (-1);
 	init_state->parent = NULL;
 	init_state->visited = false;	
-
+	visited.insert(init_state->current);
+	std::cout<<"Bound = "<<bound<<std::endl;
 	while(true)
 	{
 		//init_state->current.print();
 		result = search(init_state, 0, test_problem, heur); // IDA* search from the root
+		
+		visited.clear();
 		if(result == 0) // Reached goal state
 		{
 			State_Space *traverse = new State_Space;
@@ -84,8 +86,11 @@ unsigned int ida_star::search(State_Space *state, unsigned int g, Problem &test_
 	unsigned int f = g + heur.manhattan_dist_score(state->current);
 	//unsigned int f = g; // UCS
  	
-	//std::cout<<"heuristic in search = "<<heur.manhattan_dist_score(state->current)<<"; f = "<<f<<std::endl;
+	std::cout<<"heuristic in search = "<<heur.manhattan_dist_score(state->current)<<"; f = "<<f<<std::endl;
 	// Return f if f value is > cutoff bound
+	state->current.print();
+	std::cout<<std::endl;		
+
 	if(f > bound)
 		return f;
 
@@ -96,7 +101,7 @@ unsigned int ida_star::search(State_Space *state, unsigned int g, Problem &test_
 	unsigned int min = UINT_MAX, temp_result;
 
 	// Generate successors of current state
-	State_Space *next = new State_Space;
+	//State_Space *next = new State_Space;
 	
 	std::vector<Action> actions = test_problem.valid_actions(&state->current);
 	if(actions.empty())
@@ -105,17 +110,25 @@ unsigned int ida_star::search(State_Space *state, unsigned int g, Problem &test_
 	for(std::vector<Action>::iterator it = actions.begin(); it!=actions.end(); ++it)
         {
                 // Get and store the successors of current state
+		State_Space *next = new State_Space;
                 State s = test_problem.result(&state->current, *it);
                 next->current = s;
 		next->parent_to_curr = *it;
                 next->parent = state;
                 if(test_problem.goal_test(&next->current))
                         goal = next;
-		temp_result = search(next, (g+1), test_problem, heur);
-	        if(temp_result == 0) // Reached goal state
-                   	return 0;
-	        if(temp_result < min) // Update bound
-        	        min = temp_result;
+
+		if(!visited.count(next->current))
+		{
+			visited.insert(next->current);
+			temp_result = search(next, (g+1), test_problem, heur);
+		        if(temp_result == 0) // Reached goal state
+                	   	return 0;
+		        if(temp_result < min) // Update bound
+        		        min = temp_result;
+		}
+		else
+			std::cout<<"Already visited state"<<std::endl;
         }
 	
 	return min;

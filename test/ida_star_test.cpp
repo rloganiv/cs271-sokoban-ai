@@ -6,15 +6,18 @@
 #include "assignmentsolver.h"
 #include "heuristic.h"
 #include "bbsolver.h"
+#include <chrono>
+
+typedef std::chrono::high_resolution_clock Clock;
 
 int main() {
     using namespace std;
-    Problem test_problem("courseTestFile");
+    //Problem test_problem("courseTestFile");
     //Problem test_problem("std_suite/screen.1");
     //Problem test_problem("std_suite/screen.2");
     //Problem test_problem("addtl_test_suite/testFile2");
-    //Problem test_problem("addtl_test_suite/testFile3");
-    //Problem test_problem("addtl_test_suite/microban3");
+    Problem test_problem("addtl_test_suite/testFile3");
+   // Problem test_problem("addtl_test_suite/microban01");
     cout << "Initializing problem from file" << endl;
     State *init_state;
     init_state = test_problem.get_init_state();
@@ -30,8 +33,13 @@ int main() {
     std::vector<Action> path_to_goal;
 
     ida_star ida;
+    auto t1 = Clock::now();
     path_to_goal = ida.ida_begin(*init_state, test_problem, solver);
+    auto t2 = Clock::now();
     cout << "Returned from IDA* " << endl;
+    std::cout << "Running time = "
+              << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+              << " nanoseconds" << std::endl;
 
     if(path_to_goal.empty())
     {
