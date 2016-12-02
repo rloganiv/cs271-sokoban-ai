@@ -132,32 +132,32 @@ std::vector<Action> Problem::valid_actions(State *state){
     int x = state->player.x;
     int y = state->player.y;
     int width = state->width;
-    bool clear;
+    bool clear_push;
     Tile near, far;
 
     // Check if player can move up
     near = state->get_tile(x, y - 1);
     far = state->get_tile(x, y - 2);
-    clear = !deadlock_arr[(y-1)*width + x];
-    if (can_move(near, far) && clear) { actions.push_back(UP); }
+    clear_push = !(near==BOX || near==GOALBOX) || !deadlock_arr[(y - 2)*width + x];
+    if (can_move(near, far) && clear_push) { actions.push_back(UP); }
 
     // Check if player can move down
     near = state->get_tile(x, y + 1);
     far = state->get_tile(x, y + 2);
-    clear = !deadlock_arr[(y+1)*width + x];
-    if (can_move(near, far) && clear) { actions.push_back(DOWN); }
+    clear_push = !(near==BOX || near==GOALBOX) || !deadlock_arr[(y + 2)*width + x];
+    if (can_move(near, far) && clear_push) { actions.push_back(DOWN); }
 
     // Check if player can move left
     near = state->get_tile(x - 1, y);
     far = state->get_tile(x - 2, y);
-    clear = !deadlock_arr[y*width + x - 1];
-    if (can_move(near, far) && clear) { actions.push_back(LEFT); }
+    clear_push = !(near==BOX || near==GOALBOX) || !deadlock_arr[y*width + x - 2];
+    if (can_move(near, far) && clear_push) { actions.push_back(LEFT); }
 
     // Check if player can move right
     near = state->get_tile(x + 1, y);
     far = state->get_tile(x + 2, y);
-    clear = !deadlock_arr[(y-1)*width + x + 1]; // SO STINKY
-    if (can_move(near, far) && clear) { actions.push_back(RIGHT); }
+    clear_push = !(near==BOX || near==GOALBOX) || !deadlock_arr[y*width + x + 2];
+    if (can_move(near, far) && clear_push) { actions.push_back(RIGHT); }
 
     return actions;
 }
