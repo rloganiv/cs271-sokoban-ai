@@ -2,6 +2,7 @@
 #define PROBLEM_H
 
 #include "state.h"
+#include "deadlock.h"
 #include <string>
 #include <vector>
 
@@ -25,6 +26,9 @@ class Problem {
 
         // Check if given state is a goal state
         bool goal_test(State *state);
+
+        // Deadlock array
+        bool* deadlock_arr;
 
         // Getters
         State* get_init_state();

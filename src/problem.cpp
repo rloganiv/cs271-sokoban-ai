@@ -105,6 +105,7 @@ Problem::Problem(std::string filename) {
     temp_state->player.x = player_coords[0] - 1;
     temp_state->player.y = player_coords[1] - 1;
 
+    deadlock_arr = get_deadlocks(temp_state);
     init_state = temp_state;
 }
 
@@ -130,27 +131,33 @@ std::vector<Action> Problem::valid_actions(State *state){
     vector<Action> actions;
     int x = state->player.x;
     int y = state->player.y;
+    int width = state->width;
+    bool clear;
     Tile near, far;
 
     // Check if player can move up
     near = state->get_tile(x, y - 1);
     far = state->get_tile(x, y - 2);
-    if (can_move(near, far)) { actions.push_back(UP); }
+    clear = !deadlock_arr[(y-1)*width + x];
+    if (can_move(near, far) && clear) { actions.push_back(UP); }
 
     // Check if player can move down
     near = state->get_tile(x, y + 1);
     far = state->get_tile(x, y + 2);
-    if (can_move(near, far)) { actions.push_back(DOWN); }
+    clear = !deadlock_arr[(y+1)*width + x];
+    if (can_move(near, far) && clear) { actions.push_back(DOWN); }
 
     // Check if player can move left
     near = state->get_tile(x - 1, y);
     far = state->get_tile(x - 2, y);
-    if (can_move(near, far)) { actions.push_back(LEFT); }
+    clear = !deadlock_arr[y*width + x - 1];
+    if (can_move(near, far) && clear) { actions.push_back(LEFT); }
 
     // Check if player can move right
     near = state->get_tile(x + 1, y);
     far = state->get_tile(x + 2, y);
-    if (can_move(near, far)) { actions.push_back(RIGHT); }
+    clear = !deadlock_arr[(y-1)*width + x + 1]; // SO STINKY
+    if (can_move(near, far) && clear) { actions.push_back(RIGHT); }
 
     return actions;
 }

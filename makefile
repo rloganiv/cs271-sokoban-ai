@@ -10,8 +10,8 @@ SRC = src/
 INCL = -Iinclude/
 
 # Make commands
-problem_test: state.o problem.o
-	$(CC) $(CFLAGS) $(INCL) -o bin/problem_test test/problem_test.cpp build/problem.o build/state.o
+problem_test: state.o problem.o deadlock.o
+	$(CC) $(CFLAGS) $(INCL) -o bin/problem_test test/problem_test.cpp build/problem.o build/state.o build/deadlock.o
 state_test: state.o
 	$(CC) $(CFLAGS) $(INCL) -o bin/state_test test/state_test.cpp build/state.o
 
