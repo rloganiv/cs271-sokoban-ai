@@ -2,10 +2,10 @@
 #include "problem.h"
 #include <iostream>
 
-int main(){
+int main(int argc, char** argv){
     using namespace std;
     cout << "Initializing Problem" << endl;
-    Problem test_problem("courseTestFile");
+    Problem test_problem(argv[1]);
     State *init_state = test_problem.get_init_state();
     int height = init_state->height;
     int width = init_state->width;

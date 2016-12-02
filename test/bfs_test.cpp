@@ -8,20 +8,13 @@
 
 typedef std::chrono::high_resolution_clock Clock;
 
-int main() {
+int main(int argc, char** argv) {
     using namespace std;
    // Problem test_problem;
    // BBSolver solver;
     State *init_state;
     cout << "Initializing problem from file" << endl;
-   // Problem test_problem("courseTestFile"); // Solves
-   // Problem test_problem("std_suite/screen.1"); // Segmentation fault - out of memory 
-   // Problem test_problem("addtl_test_suite/testFile2"); // Solves
-    Problem test_problem("addtl_test_suite/testFile3"); // Solves
-   // Problem test_problem("addtl_test_suite/microban04"); // Solves
-   // Solves quickly - microban 1, 2, 3, 4, 6, 8, 9, 10
-   // Long time to solve - microban 5, 7 (I ended it - too long)	
-   // Need to check path to goal for everything
+    Problem test_problem(argv[1]); // Solves
 
     init_state = test_problem.get_init_state();
     cout << "Printing initial state" << endl;
@@ -38,7 +31,7 @@ int main() {
     path_to_goal = b.bfs_begin(*init_state, test_problem);
     auto t2 = Clock::now();
     cout << "Returned from BFS " << endl;
-    std::cout << "Running time = " 
+    std::cout << "Running time = "
               << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
               << " nanoseconds" << std::endl;
     if(path_to_goal.empty())

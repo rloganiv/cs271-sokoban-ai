@@ -7,14 +7,9 @@
 #include "heuristic.h"
 #include "bbsolver.h"
 
-int main() {
+int main(int argc, char** argv) {
     using namespace std;
-    Problem test_problem("courseTestFile");
-    //Problem test_problem("std_suite/screen.1");
-    //Problem test_problem("std_suite/screen.2");
-    //Problem test_problem("addtl_test_suite/testFile2");
-    //Problem test_problem("addtl_test_suite/testFile3");
-    //Problem test_problem("addtl_test_suite/microban3");
+    Problem test_problem(argv[1]);
     cout << "Initializing problem from file" << endl;
     State *init_state;
     init_state = test_problem.get_init_state();

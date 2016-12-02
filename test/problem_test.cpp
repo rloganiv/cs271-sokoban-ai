@@ -2,11 +2,11 @@
 #include <iostream>
 #include <vector>
 
-int main() {
+int main(int argc, char** argv) {
     using namespace std;
 
     cout << "Initializing problem from file" << endl;
-    Problem test_problem("std_suite/screen.1");
+    Problem test_problem(argv[1]);
 
     cout << "Printing initial state" << endl;
     State * init_state;
