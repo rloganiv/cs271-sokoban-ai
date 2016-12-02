@@ -1,12 +1,12 @@
 #include "problem.h"
 #include "state_space.h"
-//#include "ida_star.h"
 #include <iostream>
 #include <vector>
 #include "bfs.h"
-//#include "assignmentsolver.h"
-//#include "heuristic.h"
-//#include "bbsolver.h"
+#include <ctime>
+#include <chrono>
+
+typedef std::chrono::high_resolution_clock Clock;
 
 int main() {
     using namespace std;
@@ -15,10 +15,14 @@ int main() {
     State *init_state;
     cout << "Initializing problem from file" << endl;
    // Problem test_problem("courseTestFile"); // Solves
-   // Problem test_problem("std_suite/screen.1"); // Segmentation fault
+   // Problem test_problem("std_suite/screen.1"); // Segmentation fault - out of memory 
    // Problem test_problem("addtl_test_suite/testFile2"); // Solves
-   // Problem test_problem("addtl_test_suite/testFile3"); // Solves
-    Problem test_problem("addtl_test_suite/microban3"); // Solves
+    Problem test_problem("addtl_test_suite/testFile3"); // Solves
+   // Problem test_problem("addtl_test_suite/microban04"); // Solves
+   // Solves quickly - microban 1, 2, 3, 4, 6, 8, 9, 10
+   // Long time to solve - microban 5, 7 (I ended it - too long)	
+   // Need to check path to goal for everything
+
     init_state = test_problem.get_init_state();
     cout << "Printing initial state" << endl;
     init_state->print();
@@ -28,12 +32,16 @@ int main() {
 
     cout << "Calling BFS" << endl;
     std::vector<Action> path_to_goal;
-
+    time_t start, end, diff;
     bfs b;
+    auto t1 = Clock::now();
     path_to_goal = b.bfs_begin(*init_state, test_problem);
+    auto t2 = Clock::now();
     cout << "Returned from BFS " << endl;
-
-    /*if(path_to_goal.empty())
+    std::cout << "Running time = " 
+              << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+              << " nanoseconds" << std::endl;
+    if(path_to_goal.empty())
     {
 	cout << " No solution found " << endl;
 	return -1;
@@ -47,7 +55,7 @@ int main() {
     	for(auto it = path_to_goal.begin(); it!= path_to_goal.end(); ++it)
 		cout <<  *it << " ";
  	cout << endl;
-    }*/
+    }
     return 0;
 }
 
