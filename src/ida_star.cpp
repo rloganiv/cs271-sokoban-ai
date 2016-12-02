@@ -44,11 +44,11 @@ std::vector<Action> ida_star::ida_begin(State &root, Problem &test_problem, Assi
 	init_state->parent = NULL;
 	init_state->visited = false;	
 	visited.insert(init_state->current);
-	std::cout<<"Bound = "<<bound<<std::endl;
 	while(true)
 	{
 		//init_state->current.print();
 		result = search(init_state, 0, test_problem, heur); // IDA* search from the root
+		std::cout<<"Bound = "<<bound<<std::endl;
 		
 		visited.clear();
 		if(result == 0) // Reached goal state

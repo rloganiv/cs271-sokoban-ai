@@ -32,20 +32,20 @@ struct K {
     /* Hard code constants for now. Refactor into HeuristicParams class and dependency inject
        if enough time */
 
-    static const int NEXT_TO_BLOCK_BONUS = -10;
-    static const int GOAL_SCORE_SCALE = 2;
+    static const int NEXT_TO_BLOCK_BONUS = 0;//-10;
+    static const int GOAL_SCORE_SCALE = 0;//2;
 
     // Large value to indicate this is an unsolvable situation
     static const int IMMOVABLE_BONUS = 999000999;
 
 
-    static const int BLOCK_UNPUSHABLE_BONUS = 8;
+    static const int BLOCK_UNPUSHABLE_BONUS = 0;//8;
 
     // To introduce greater granularity, a single manhattan distance
     // in the right direction is scaled to STEP_SCALE
-    static const int STEP_SCALE = 100;
+    static const int STEP_SCALE = 1;//100;
 
-    static const int PLAYER_NOT_CLOSE_TO_BLOCK_MULTIPLIER = 3;
+    static const int PLAYER_NOT_CLOSE_TO_BLOCK_MULTIPLIER = 0;//3;
 
     static const int * PLAYER_CLOSE_TO_BLOCK_BONUS;
 
@@ -53,7 +53,7 @@ struct K {
 
 struct ltCoord{
     bool operator()(const Coord &l, const Coord &r) const{
-        return l.y < r.y || l.y == r.y && l.x < r.x;
+        return (l.y < r.y) || ((l.y == r.y) && (l.x < r.x));
     }
 
 };

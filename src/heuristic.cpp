@@ -19,7 +19,7 @@
 #include <functional>
 #include <utility>
 
-static const int K_PLAYER_CLOSE_TO_BLOCK_BONUS[] = {-12, -10, -8, -4, 0 };
+static const int K_PLAYER_CLOSE_TO_BLOCK_BONUS[] = {0, 0, 0, 0, 0}; //{-12, -10, -8, -4, 0 };
 const int * K::PLAYER_CLOSE_TO_BLOCK_BONUS = K_PLAYER_CLOSE_TO_BLOCK_BONUS;
 
 Heuristic :: Heuristic (State * s, AssignmentSolver * assign_solver)
