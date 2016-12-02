@@ -9,6 +9,7 @@
 #include "assignmentsolver.h"
 #include "bbsolver.h"
 #include <unordered_set>
+#include <unordered_map>
 
 class ida_star {
 
@@ -32,7 +33,8 @@ class ida_star {
 		std::vector<Action> path_to_goal;
 		
 		// Keep track of visited states
-		std::unordered_set<State, StateHasher> visited;
+		//std::unordered_set<State, StateHasher> visited;
+		std::unordered_map<State, unsigned int, StateHasher> visited;
 		
 };
 

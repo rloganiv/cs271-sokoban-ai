@@ -11,7 +11,9 @@
 #include <algorithm>
 #include <climits>
 #include <unordered_set>
+#include <unordered_map>
 
+StateHasher sh;
 
 // Temporary heuristic function - to be modified once heuristic classes are finalized
 unsigned int h(State &state, unsigned int f)
@@ -33,6 +35,7 @@ ida_star::ida_star()
 // Begin IDA* search from root node
 std::vector<Action> ida_star::ida_begin(State &root, Problem &test_problem, AssignmentSolver &solver)
 {
+
 	// Reset bound to the heuristic cost to reach the goal from the root
 	Heuristic heur(&root, &solver);
 	bound = heur.manhattan_dist_score(root);
@@ -42,14 +45,16 @@ std::vector<Action> ida_star::ida_begin(State &root, Problem &test_problem, Assi
 	init_state->current = root;
 	init_state->parent_to_curr = static_cast <Action> (-1);
 	init_state->parent = NULL;
-	init_state->visited = false;	
-	visited.insert(init_state->current);
+	init_state->visited = false;
+		
 	while(true)
 	{
+		//visited.insert(init_state->current);
+		visited[init_state->current] = bound;
+	
 		//init_state->current.print();
 		result = search(init_state, 0, test_problem, heur); // IDA* search from the root
-		std::cout<<"Bound = "<<bound<<std::endl;
-		
+	
 		visited.clear();
 		if(result == 0) // Reached goal state
 		{
@@ -74,6 +79,8 @@ std::vector<Action> ida_star::ida_begin(State &root, Problem &test_problem, Assi
 			return path_to_goal;
 		}
 		bound = result;
+		std::cout<<"Bound = "<<bound<<std::endl;
+		
 	}
 }
 
@@ -86,10 +93,11 @@ unsigned int ida_star::search(State_Space *state, unsigned int g, Problem &test_
 	unsigned int f = g + heur.manhattan_dist_score(state->current);
 	//unsigned int f = g; // UCS
  	
-	std::cout<<"heuristic in search = "<<heur.manhattan_dist_score(state->current)<<"; f = "<<f<<std::endl;
+	std::cout<<std::endl<<"Heuristic in search = "<<heur.manhattan_dist_score(state->current)<<"; f = "<<f<<std::endl;
 	// Return f if f value is > cutoff bound
 	state->current.print();
-	std::cout<<std::endl;		
+	//std::cout<<std::endl;		
+	std::cout<<"Hashing value= "<<sh(state->current)<<std::endl;
 
 	if(f > bound)
 		return f;
@@ -104,23 +112,25 @@ unsigned int ida_star::search(State_Space *state, unsigned int g, Problem &test_
 	//State_Space *next = new State_Space;
 	
 	std::vector<Action> actions = test_problem.valid_actions(&state->current);
-	if(actions.empty())
-		return UINT_MAX;	
+	//if(actions.empty())
+	//	return UINT_MAX;	
 
 	for(std::vector<Action>::iterator it = actions.begin(); it!=actions.end(); ++it)
         {
                 // Get and store the successors of current state
 		State_Space *next = new State_Space;
-                State s = test_problem.result(&state->current, *it);
+                const State &s = test_problem.result(&state->current, *it);
                 next->current = s;
 		next->parent_to_curr = *it;
                 next->parent = state;
                 if(test_problem.goal_test(&next->current))
                         goal = next;
-
-		if(!visited.count(next->current))
+		unsigned int fnew = g + 1 + heur.manhattan_dist_score(next->current);
+		//if(!visited.count(s))
+		if(!visited.count(s) || (fnew < visited[s]))	
 		{
-			visited.insert(next->current);
+			//visited.insert(next->current);
+			visited[next->current] = fnew;
 			temp_result = search(next, (g+1), test_problem, heur);
 		        if(temp_result == 0) // Reached goal state
                 	   	return 0;
