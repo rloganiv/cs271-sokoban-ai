@@ -30,7 +30,7 @@ bbsolver.o:
 heuristic_test: state.o manhattandist.o graph.o heuristic.o bbsolver.o problem.o
 	$(CC) $(CFLAGS) $(INCL) -o bin/heuristic_test test/heuristic_test.cpp build/bbsolver.o build/state.o build/problem.o build/manhattandist.o build/graph.o build/heuristic.o
 
-graph.o: state.o 	
+graph.o: state.o
 	$(CC) $(CFLAGS) $(INCL) -c src/graph.cpp -o build/graph.o
 
 manhattandist.o: state.o graph.o
@@ -45,12 +45,17 @@ ida_star_test: ida_star.o state.o problem.o manhattandist.o graph.o heuristic.o 
 ida_star.o: heuristic.o
 	$(CC) $(CFLAGS) $(INCL) -c src/ida_star.cpp -o build/ida_star.o
 
-
 bfs_test: bfs.o state.o problem.o
-	$(CC) $(CFLAGS) $(INCL) -o bin/bfs_test test/bfs_test.cpp build/bfs.o build/state.o build/problem.o 
+	$(CC) $(CFLAGS) $(INCL) -o bin/bfs_test test/bfs_test.cpp build/bfs.o build/state.o build/problem.o
 
-bfs.o: 
+bfs.o:
 	$(CC) $(CFLAGS) $(INCL) -c src/bfs.cpp -o build/bfs.o
+
+deadlock.o:
+	$(CC) $(CFLAGS) $(INCL) -c src/deadlock.cpp -o build/deadlock.o
+
+deadlock_test: state.o problem.o deadlock.o
+	$(CC) $(CFLAGS) $(INCL) -o bin/deadlock_test test/deadlock_test.cpp build/deadlock.o build/problem.o build/state.o
 
 clean:
 	rm -f bin/* build/*
