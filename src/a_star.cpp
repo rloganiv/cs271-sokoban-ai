@@ -15,7 +15,7 @@
 #include "a_star.h"
 #include <list>
 
-// Initialize cut-off bound of IDA* search to 0 and create goal, initial state objects
+// Create initial state and goal state objects
 AStar::AStar()
 {
 	init_state = new State_Space;
