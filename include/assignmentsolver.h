@@ -8,7 +8,7 @@
 
 #ifndef AssignmentSolver_h
 #define AssignmentSolver_h
-
+#include <vector>
 
 // Abstract class. Assignment solver interface for same size bipartite graphs G = vertices: V u U where |V| = |U|
 
