@@ -45,10 +45,11 @@ int main(int argc, char** argv) {
     {
 	cout << "Number of moves to the goal = " <<path_to_goal.size()<< endl;
     	cout << "Path to goal = ";
-
 	// Print the path to the goal state
-    	for(auto it = path_to_goal.begin(); it!= path_to_goal.end(); ++it)
-		cout <<  *it << " ";
+	const char path_actions[4] =    {'U', 'D', 'L', 'R'};
+
+        for(auto it = path_to_goal.begin(); it!= path_to_goal.end(); ++it)
+                cout << path_actions[*it] << " ";
  	cout << endl;
     }
     return 0;
