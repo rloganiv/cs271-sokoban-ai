@@ -34,7 +34,7 @@ State::State(const State& b)
 }
 
 State::~State() {
-    delete [] tiles;
+    //delete [] tiles;
 }
 
 bool State::operator==(const State& b) const {
