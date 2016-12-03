@@ -10,11 +10,9 @@ typedef std::chrono::high_resolution_clock Clock;
 
 int main(int argc, char** argv) {
     using namespace std;
-   // Problem test_problem;
-   // BBSolver solver;
     State *init_state;
     cout << "Initializing problem from file" << endl;
-    Problem test_problem(argv[1]); // Solves
+    Problem test_problem(argv[1]);
 
     init_state = test_problem.get_init_state();
     cout << "Printing initial state" << endl;
@@ -43,10 +41,12 @@ int main(int argc, char** argv) {
     {
 	cout << "Number of moves to the goal = " <<path_to_goal.size()<< endl;
     	cout << "Path to goal = ";
-
 	// Print the path to the goal state
-    	for(auto it = path_to_goal.begin(); it!= path_to_goal.end(); ++it)
-		cout <<  *it << " ";
+	const char path_actions[4] =    {'U', 'D', 'L', 'R'};
+
+        for(auto it = path_to_goal.begin(); it!= path_to_goal.end(); ++it)
+                cout << path_actions[*it] << " ";
+
  	cout << endl;
     }
     return 0;
