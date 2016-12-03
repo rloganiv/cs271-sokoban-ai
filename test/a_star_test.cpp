@@ -1,0 +1,58 @@
+#include "problem.h"
+#include "state_space.h"
+#include <iostream>
+#include <vector>
+#include "a_star.h"
+#include <ctime>
+#include "heuristic.h"
+#include "bbsolver.h"
+#include "assignmentsolver.h"
+#include <chrono>
+
+
+typedef std::chrono::high_resolution_clock Clock;
+
+int main(int argc, char** argv) {
+    using namespace std;
+    BBSolver solver;
+    State *init_state;
+    cout << "Initializing problem from file" << endl;
+    Problem test_problem(argv[1]);
+    init_state = test_problem.get_init_state();
+    cout << "Printing initial state" << endl;
+    init_state->print();
+
+    cout << "Checking if initial state is a goal" << endl;
+    cout << test_problem.goal_test(init_state) << endl;
+
+    cout << "Calling A*" << endl;
+    std::vector<Action> path_to_goal;
+    AStar astar;
+    auto t1 = Clock::now();
+    path_to_goal = astar.a_star_begin(*init_state, test_problem, solver);
+    auto t2 = Clock::now();	    
+    cout << "Returned from A* " << endl;
+    
+    std::cout << "Running time = "
+              << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+              << " nanoseconds" << std::endl; 
+
+    if(path_to_goal.empty())
+    {
+	cout << " No solution found " << endl;
+	return -1;
+    }
+    else
+    {
+	cout << "Number of moves to the goal = " <<path_to_goal.size()<< endl;
+    	cout << "Path to goal = ";
+	// Print the path to the goal state 	
+	const char path_actions[4] =	{'U', 'D', 'L', 'R'};
+
+	for(auto it = path_to_goal.begin(); it!= path_to_goal.end(); ++it)
+		cout << path_actions[*it] << " ";
+ 	cout << endl;
+    }
+    return 0;
+}
+
