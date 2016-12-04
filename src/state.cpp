@@ -56,13 +56,23 @@ Tile State::get_tile(int x, int y) const {
     return tiles[x + width*y];
 }
 
+const char* format(Tile t){
+    switch(t) {
+        case EMPTY: return " ";
+        case WALL: return "#";
+        case BOX: return "$";
+        case GOAL: return ".";
+        case GOALBOX: return "*";
+        case PLAYER: return "@";
+    }
+}
 void State::print() {
     using namespace std;
     Tile old_state = get_tile(player.x, player.y);
     set_tile(player.x, player.y, PLAYER);
     for (int y=0; y < height; y++) {
         for (int x=0; x < width; x++) {
-            cout << get_tile(x, y) << " ";
+            cout << format(get_tile(x, y)) << " ";
         }
         cout << endl;
     }
