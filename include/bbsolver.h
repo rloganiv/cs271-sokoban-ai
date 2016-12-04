@@ -122,16 +122,16 @@ private:
 	inline bbNode h_upper_bound(){
 		bbNode res = makeEmptyNode();
 			for(int i = 0; i < N; i++){
-			int max = INT_MIN;
-			int max_index = -1;
+			int min = INT_MAX;
+			int min_index = -1;
 			std::set<int>::iterator it;
 			for(it = res.free_jobs.begin(); it != res.free_jobs.end(); it++){
-				if(costMatrix[i][*it] > max){
-					max = costMatrix[i][*it];
-					max_index = *it;
+				if(costMatrix[i][*it] < min){
+					min = costMatrix[i][*it];
+					min_index = *it;
 				}
 			}
-			res = assign(res, max_index);
+			res = assign(res, min_index);
 		}
 		return res;
 	}
