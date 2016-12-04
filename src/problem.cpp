@@ -134,30 +134,59 @@ std::vector<Action> Problem::valid_actions(State *state){
     int width = state->width;
     bool clear_push;
     Tile near, far;
+    State temp;
 
     // Check if player can move up
     near = state->get_tile(x, y - 1);
     far = state->get_tile(x, y - 2);
     clear_push = !(near==BOX || near==GOALBOX) || !deadlock_arr[(y - 2)*width + x];
-    if (can_move(near, far) && clear_push) { actions.push_back(UP); }
+    if (can_move(near, far) && clear_push) {
+        Coord to;
+        to.x = x; to.y = y - 1;
+        temp = result(state, UP);
+        if (!freeze_check(&temp, deadlock_arr, to)){
+            actions.push_back(UP);
+        }
+    }
 
     // Check if player can move down
     near = state->get_tile(x, y + 1);
     far = state->get_tile(x, y + 2);
     clear_push = !(near==BOX || near==GOALBOX) || !deadlock_arr[(y + 2)*width + x];
-    if (can_move(near, far) && clear_push) { actions.push_back(DOWN); }
+    if (can_move(near, far) && clear_push) {
+        Coord to;
+        to.x = x; to.y = y + 1;
+        temp = result(state, DOWN);
+        if (!freeze_check(&temp, deadlock_arr, to)){
+            actions.push_back(DOWN);
+        }
+    }
 
     // Check if player can move left
     near = state->get_tile(x - 1, y);
     far = state->get_tile(x - 2, y);
     clear_push = !(near==BOX || near==GOALBOX) || !deadlock_arr[y*width + x - 2];
-    if (can_move(near, far) && clear_push) { actions.push_back(LEFT); }
+    if (can_move(near, far) && clear_push) {
+        Coord to;
+        to.x = x - 1; to.y = y;
+        temp = result(state, LEFT);
+        if (!freeze_check(&temp, deadlock_arr, to)){
+            actions.push_back(LEFT);
+        }
+    }
 
     // Check if player can move right
     near = state->get_tile(x + 1, y);
     far = state->get_tile(x + 2, y);
     clear_push = !(near==BOX || near==GOALBOX) || !deadlock_arr[y*width + x + 2];
-    if (can_move(near, far) && clear_push) { actions.push_back(RIGHT); }
+    if (can_move(near, far) && clear_push) {
+        Coord to;
+        to.x = x; to.y = y + 1;
+        temp = result(state, RIGHT);
+        if (!freeze_check(&temp, deadlock_arr, to)){
+            actions.push_back(RIGHT);
+        }
+    }
 
     return actions;
 }

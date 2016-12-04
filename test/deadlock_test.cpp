@@ -24,5 +24,8 @@ int main(int argc, char** argv){
         cout << endl;
     }
 
+    cout << "Freeze deadlock check" << endl;
+    cout << freeze_check(init_state, deadlock_arr, init_state->player);
+
 
 }

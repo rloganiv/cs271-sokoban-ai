@@ -6,5 +6,6 @@
 #include <queue>
 
 bool* get_simple_deadlocks(State* s);
+bool freeze_check(State* s, bool* deadlock_arr, Coord coord);
 
 #endif
