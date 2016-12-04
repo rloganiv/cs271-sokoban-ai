@@ -13,10 +13,10 @@ int main(int argc, char** argv){
     cout << "Printing initial state" << endl;
     init_state->print();
 
-    cout << "Creating deadlock array" << endl;
-    bool* deadlock_arr = get_deadlocks(init_state);
+    cout << "Creating simple deadlock array" << endl;
+    bool* deadlock_arr = get_simple_deadlocks(init_state);
 
-    cout << "Printing deadlock array" << endl;
+    cout << "Printing simple deadlock array" << endl;
     for (int i=0; i<height; i++){
         for (int j=0; j<width; j++){
             cout << deadlock_arr[i*width + j] << " " ;

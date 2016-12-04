@@ -2,7 +2,9 @@
 #define DEADLOCK_H
 
 #include "state.h"
+#include <vector>
+#include <queue>
 
-bool* get_deadlocks(State* s);
+bool* get_simple_deadlocks(State* s);
 
 #endif

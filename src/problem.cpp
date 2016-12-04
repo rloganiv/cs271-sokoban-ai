@@ -105,7 +105,7 @@ Problem::Problem(std::string filename) {
     temp_state->player.x = player_coords[0] - 1;
     temp_state->player.y = player_coords[1] - 1;
 
-    deadlock_arr = get_deadlocks(temp_state);
+    deadlock_arr = get_simple_deadlocks(temp_state);
     init_state = temp_state;
 }
 
