@@ -1,10 +1,13 @@
 #include "problem.h"
+#include "parameters.h"
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
 #include <iterator>
 #include <iostream>
+
+bool deadlock_on;
 
 /* str_to_ivec
  *      Converts a string into a vector of integers. This function helps parse
@@ -106,13 +109,6 @@ Problem::Problem(std::string filename) {
     temp_state->player.y = player_coords[0] - 1;
 
     deadlock_arr = get_simple_deadlocks(temp_state);
-    cout << "Printing simple deadlock array" << endl;
-    for (int i=0; i<temp_state->height; i++){
-        for (int j=0; j<temp_state->width; j++){
-            cout << deadlock_arr[i*temp_state->width + j] << " " ;
-        }
-        cout << endl;
-    }
     init_state = temp_state;
 }
 
@@ -143,76 +139,105 @@ std::vector<Action> Problem::valid_actions(State *state){
     Tile near, far;
     State temp;
 
-    // Check if player can move up
-    near = state->get_tile(x, y - 1);
-    far = state->get_tile(x, y - 2);
-    is_push = (near == BOX) || (near == GOALBOX);
+    // Deadlock checking
+    if (deadlock_on){
+        // Check if player can move up
+        near = state->get_tile(x, y - 1);
+        far = state->get_tile(x, y - 2);
+        is_push = (near == BOX) || (near == GOALBOX);
 
-    // If player is not pushing & can move then add action
-    if (!is_push && can_move(near, far))
-        actions.push_back(UP);
-    // If player is pushing do deadlock and freeze check
-    else if (!deadlock_arr[x + (y - 2) * width] && can_move(near, far)){
-        Coord to;
-        to.x = x; to.y = y - 2;
-        temp = result(state, UP);
-        if (!freeze_check(&temp, deadlock_arr, to)){
+        // If player is not pushing & can move then add action
+        if (!is_push && can_move(near, far))
             actions.push_back(UP);
+        // If player is pushing do deadlock and freeze check
+        else if (!deadlock_arr[x + (y - 2) * width] && can_move(near, far)){
+            Coord to;
+            to.x = x; to.y = y - 2;
+            temp = result(state, UP);
+            if (!freeze_check(&temp, deadlock_arr, to)){
+                actions.push_back(UP);
+            }
         }
-    }
 
-    // Check if player can move down
-    near = state->get_tile(x, y + 1);
-    far = state->get_tile(x, y + 2);
-    is_push = (near == BOX) || (near == GOALBOX);
+        // Check if player can move down
+        near = state->get_tile(x, y + 1);
+        far = state->get_tile(x, y + 2);
+        is_push = (near == BOX) || (near == GOALBOX);
 
-    // If player is not pushing & can move then add action
-    if (!is_push && can_move(near, far))
-        actions.push_back(DOWN);
-    // If player is pushing do deadlock and freeze check
-    else if (!deadlock_arr[x + (y + 2) * width] && can_move(near, far)){
-        Coord to;
-        to.x = x; to.y = y + 2;
-        temp = result(state, DOWN);
-        if (!freeze_check(&temp, deadlock_arr, to)){
+        // If player is not pushing & can move then add action
+        if (!is_push && can_move(near, far))
             actions.push_back(DOWN);
+        // If player is pushing do deadlock and freeze check
+        else if (!deadlock_arr[x + (y + 2) * width] && can_move(near, far)){
+            Coord to;
+            to.x = x; to.y = y + 2;
+            temp = result(state, DOWN);
+            if (!freeze_check(&temp, deadlock_arr, to)){
+                actions.push_back(DOWN);
+            }
         }
-    }
 
-    // Check if player can move left
-    near = state->get_tile(x - 1, y);
-    far = state->get_tile(x - 2, y);
-    is_push = (near == BOX) || (near == GOALBOX);
+        // Check if player can move left
+        near = state->get_tile(x - 1, y);
+        far = state->get_tile(x - 2, y);
+        is_push = (near == BOX) || (near == GOALBOX);
 
-    // If player is not pushing & can move then add action
-    if (!is_push && can_move(near, far))
-        actions.push_back(LEFT);
-    // If player is pushing do deadlock and freeze check
-    else if (!deadlock_arr[x - 2 + y * width] && can_move(near, far)){
-        Coord to;
-        to.x = x - 2; to.y = y;
-        temp = result(state, LEFT);
-        if (!freeze_check(&temp, deadlock_arr, to)){
+        // If player is not pushing & can move then add action
+        if (!is_push && can_move(near, far))
             actions.push_back(LEFT);
+        // If player is pushing do deadlock and freeze check
+        else if (!deadlock_arr[x - 2 + y * width] && can_move(near, far)){
+            Coord to;
+            to.x = x - 2; to.y = y;
+            temp = result(state, LEFT);
+            if (!freeze_check(&temp, deadlock_arr, to)){
+                actions.push_back(LEFT);
+            }
+        }
+
+        // Check if player can move right
+        near = state->get_tile(x + 1, y);
+        far = state->get_tile(x + 2, y);
+        is_push = (near == BOX) || (near == GOALBOX);
+
+        // If player is not pushing & can move then add action
+        if (!is_push && can_move(near, far))
+            actions.push_back(RIGHT);
+        // If player is pushing do deadlock and freeze check
+        else if (!deadlock_arr[x + 2 + y * width] && can_move(near, far)){
+            Coord to;
+            to.x = x + 2; to.y = y;
+            temp = result(state, RIGHT);
+            if (!freeze_check(&temp, deadlock_arr, to)){
+                actions.push_back(RIGHT);
+            }
         }
     }
+    // Deadlock checking off
+    else {
+        // Check if player can move up
+        near = state->get_tile(x, y - 1);
+        far = state->get_tile(x, y - 2);
+        if (can_move(near, far))
+            actions.push_back(UP);
 
-    // Check if player can move right
-    near = state->get_tile(x + 1, y);
-    far = state->get_tile(x + 2, y);
-    is_push = (near == BOX) || (near == GOALBOX);
+        // Check if player can move down
+        near = state->get_tile(x, y + 1);
+        far = state->get_tile(x, y + 2);
+        if (can_move(near, far))
+            actions.push_back(DOWN);
 
-    // If player is not pushing & can move then add action
-    if (!is_push && can_move(near, far))
-        actions.push_back(RIGHT);
-    // If player is pushing do deadlock and freeze check
-    else if (!deadlock_arr[x + 2 + y * width] && can_move(near, far)){
-        Coord to;
-        to.x = x + 2; to.y = y;
-        temp = result(state, RIGHT);
-        if (!freeze_check(&temp, deadlock_arr, to)){
+        // Check if player can move left
+        near = state->get_tile(x - 1, y);
+        far = state->get_tile(x - 2, y);
+        if (can_move(near, far))
+            actions.push_back(LEFT);
+
+        // Check if player can move right
+        near = state->get_tile(x + 1, y);
+        far = state->get_tile(x + 2, y);
+        if (can_move(near, far))
             actions.push_back(RIGHT);
-        }
     }
 
     return actions;

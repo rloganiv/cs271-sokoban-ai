@@ -113,7 +113,6 @@ bool freeze_check(State *s, bool* deadlock_arr, Coord coord){
     int width = check.width;
     while (!check_coords.empty())
     {
-        check.print();
         Coord front = check_coords.front();
         check_coords.pop();
         int x = front.x;
@@ -133,17 +132,11 @@ bool freeze_check(State *s, bool* deadlock_arr, Coord coord){
         else
         {
             bool lr1 = (l == WALL) || (r == WALL);
-            std::cout << "LR1: " << lr1 << " | ";
             bool lr2 = deadlock_arr[x + 1 + width*y] && deadlock_arr[x - 1 + width*y];
-            std::cout << "LR2: " << lr2 << " | ";
             bool lr3 = (l == BOX) || (r == BOX);
-            std::cout << "LR3: " << lr3 << " | ";
             bool ud1 = (u == WALL) || (d == WALL);
-            std::cout << "UD1: " << ud1 << " | ";
             bool ud2 = deadlock_arr[x + width*(y+1)] && deadlock_arr[x + width*(y-1)];
-            std::cout << "UD2: " << ud2 << " | ";
             bool ud3 = (u == BOX) || (d == BOX);
-            std::cout << "UD3: " << ud3 << std::endl;
 
             if ((lr1 || lr2)&&(ud1 || ud2)){
                 return true;

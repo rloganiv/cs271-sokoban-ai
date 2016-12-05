@@ -1,3 +1,4 @@
+#include "parameters.h"
 #include "problem.h"
 #include "state_space.h"
 #include <iostream>
@@ -9,15 +10,15 @@
 #include "assignmentsolver.h"
 #include <chrono>
 
-
 typedef std::chrono::high_resolution_clock Clock;
 
 int main(int argc, char** argv) {
     using namespace std;
     BBSolver solver;
     State *init_state;
+    deadlock_set(argv[1]);
     cout << "Initializing problem from file" << endl;
-    Problem test_problem(argv[1]);
+    Problem test_problem(argv[2]);
     init_state = test_problem.get_init_state();
     cout << "Printing initial state" << endl;
     init_state->print();
@@ -30,12 +31,12 @@ int main(int argc, char** argv) {
     AStar astar;
     auto t1 = Clock::now();
     path_to_goal = astar.a_star_begin(*init_state, test_problem, solver);
-    auto t2 = Clock::now();	    
+    auto t2 = Clock::now();
     cout << "Returned from A* " << endl;
-    
+
     std::cout << "Running time = "
               << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
-              << " nanoseconds" << std::endl; 
+              << " nanoseconds" << std::endl;
 
     if(path_to_goal.empty())
     {
@@ -46,7 +47,7 @@ int main(int argc, char** argv) {
     {
 	cout << "Number of moves to the goal = " <<path_to_goal.size()<< endl;
     	cout << "Path to goal = ";
-	// Print the path to the goal state 	
+	// Print the path to the goal state
 	const char path_actions[4] =	{'U', 'D', 'L', 'R'};
 
 	for(auto it = path_to_goal.begin(); it!= path_to_goal.end(); ++it)

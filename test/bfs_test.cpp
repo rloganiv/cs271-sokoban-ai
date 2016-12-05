@@ -1,3 +1,4 @@
+#include "parameters.h"
 #include "problem.h"
 #include "state_space.h"
 #include <iostream>
@@ -11,11 +12,12 @@ typedef std::chrono::high_resolution_clock Clock;
 int main(int argc, char** argv) {
     using namespace std;
     State *init_state;
+    deadlock_set(argv[1]);
     cout << "Initializing problem from file" << endl;
-    Problem test_problem(argv[1]);
+    Problem test_problem(argv[2]);
 
     init_state = test_problem.get_init_state();
-    cout << "Printing initial state" << endl;
+//    cout << "Printing initial state" << endl;
     init_state->print();
 
     cout << "Checking if initial state is a goal" << endl;
