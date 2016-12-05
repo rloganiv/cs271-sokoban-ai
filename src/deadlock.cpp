@@ -106,64 +106,69 @@ bool* get_simple_deadlocks(State* s){
 }
 
 bool freeze_check(State *s, bool* deadlock_arr, Coord coord){
-    std::queue<Coord> check_coords;
     State check = *s;
+
+    std::queue<Coord> check_coords;
+    check_coords.push(coord);
     int width = check.width;
     while (!check_coords.empty())
     {
         check.print();
-        Coord coord = check_coords.front();
+        Coord front = check_coords.front();
         check_coords.pop();
-        int x = coord.x;
-        int y = coord.y;
+        int x = front.x;
+        int y = front.y;
 
         Tile c, u, d, l ,r;
-        c = check.get_tile(coord.x, coord.y);
-        u = check.get_tile(coord.x, coord.y - 1);
-        d = check.get_tile(coord.x, coord.y + 1);
-        l = check.get_tile(coord.x - 1, coord.y);
-        r = check.get_tile(coord.x + 1, coord.y);
+        c = check.get_tile(front.x, front.y);
+        u = check.get_tile(front.x, front.y - 1);
+        d = check.get_tile(front.x, front.y + 1);
+        l = check.get_tile(front.x - 1, front.y);
+        r = check.get_tile(front.x + 1, front.y);
 
-        if ((c != BOX)&&(c != GOALBOX))
+        if (c == GOALBOX) // If box is on a goal then freeze cannot be detected
         {
             return false;
         }
         else
         {
-            std::cout << "Freeze Check @ " << x << " " << y << std::endl;
             bool lr1 = (l == WALL) || (r == WALL);
             std::cout << "LR1: " << lr1 << " | ";
             bool lr2 = deadlock_arr[x + 1 + width*y] && deadlock_arr[x - 1 + width*y];
             std::cout << "LR2: " << lr2 << " | ";
+            bool lr3 = (l == BOX) || (r == BOX);
+            std::cout << "LR3: " << lr3 << " | ";
             bool ud1 = (u == WALL) || (d == WALL);
             std::cout << "UD1: " << ud1 << " | ";
             bool ud2 = deadlock_arr[x + width*(y+1)] && deadlock_arr[x + width*(y-1)];
-            std::cout << "UD2: " << ud2 << std::endl;
-            if ((lr1 || lr2)&&(ud1 || ud2)&&(c!=GOAL)&&(c!=GOALBOX)){
-                std:: cout << "FREEZE DETECTED!" << std::endl;
+            std::cout << "UD2: " << ud2 << " | ";
+            bool ud3 = (u == BOX) || (d == BOX);
+            std::cout << "UD3: " << ud3 << std::endl;
+
+            if ((lr1 || lr2)&&(ud1 || ud2)){
                 return true;
             } else {
                 check.set_tile(x, y, WALL);
             }
-            if ((u==BOX)||(u==GOALBOX)){
+            if (u==BOX && (lr1 || lr2 || lr3)){
                 Coord temp;
                 temp.x = x;
                 temp.y = y - 1;
                 check_coords.push(temp);
             }
-            if ((d==BOX)||(d==GOALBOX)){
+            if (d==BOX && (lr1 || lr2 || lr3)){
                 Coord temp;
                 temp.x = x;
                 temp.y = y + 1;
                 check_coords.push(temp);
             }
-            if ((l==BOX)||(l==GOALBOX)){
+            if (l==BOX && (ud1 || ud2 || ud3)){
                 Coord temp;
                 temp.x = x - 1;
                 temp.y = y;
                 check_coords.push(temp);
             }
-            if ((r==BOX)||(r==GOALBOX)){
+            if (r==BOX && (ud1 || ud2 || ud3)){
                 Coord temp;
                 temp.x = x + 1;
                 temp.y = y;

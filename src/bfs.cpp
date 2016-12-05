@@ -41,12 +41,12 @@ std::vector<Action> bfs::bfs_begin(State &root, Problem &test_problem)
 		visiting.push_back(frontier.front());
 		frontier.pop();
 
-		std::cout << "In bfs_begin" << std::endl;
+		//std::cout << "In bfs_begin" << std::endl;
 		//visiting.current.print();
 
 		//std::vector<Action> actions = test_problem.valid_actions(&visiting.current);
 		std::vector<Action> actions = test_problem.valid_actions(&temp.current);
-	
+
 		for(std::vector<Action>::iterator it = actions.begin(); it!=actions.end(); ++it)
 	        {
 			State_Space* next = new State_Space;
@@ -55,24 +55,23 @@ std::vector<Action> bfs::bfs_begin(State &root, Problem &test_problem)
 			next->current = s;
         	        next->parent_to_curr = *it;
 			next->parent = &(visiting.back());
-	                std::cout << "Visiting - child" << *it << std::endl<<std::endl;
-        	        (next->current).print();
-                	
+	                //std::cout << "Visiting - child" << *it << std::endl<<std::endl;
+        	        //(next->current).print();
 			// Check if state is the goal and store it
 	                if(test_problem.goal_test(&next->current))
         	        {
-				std::cout<<"Reached the goal "<<std::endl;
+				//std::cout<<"Reached the goal "<<std::endl;
 		        	goal = next;
 				State_Space *traverse = new State_Space;
         	                traverse = goal;
-                	     
+
 				// Get the set of moves from goal to initial state
                         	while(traverse->parent != NULL)
 				{
         	                        path_to_goal.push_back(traverse->parent_to_curr);
                         	        traverse = traverse->parent;
                                 }
-			
+
 	                        // Reverse the list to get the set of moves from initial state to goal
                         	std::reverse(path_to_goal.begin(), path_to_goal.end());
 	                        return path_to_goal;
@@ -80,14 +79,14 @@ std::vector<Action> bfs::bfs_begin(State &root, Problem &test_problem)
 
 			if(!visited.count(next->current))
 			{
-				std::cout<<"Inserted in frontier "<<std::endl;
+//				std::cout<<"Inserted in frontier "<<std::endl;
 				frontier.push(*next);
 				visited.insert(next->current);
 		   	}
-			else
-				std::cout<<"Already in frontier"<<std::endl;
+//			else
+//				std::cout<<"Already in frontier"<<std::endl;
 
-        	}
+       	}
 
 	}
 
