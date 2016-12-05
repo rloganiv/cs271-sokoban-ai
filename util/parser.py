@@ -30,9 +30,9 @@ def parse(filename):
             if char == "#":
                 walls += [y, x]
             if char == "@":
-                player = [x, y]
+                player = [y, x]
             if char == "+":
-                player = [x, y]
+                player = [y, x]
                 goals += [y, x]
             if char == "$":
                 boxes += [y, x]
