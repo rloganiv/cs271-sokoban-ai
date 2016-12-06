@@ -10,13 +10,12 @@ tot[tot==-1] = NA
 library(ggplot2)
 library(scales)
 
-ggplot(tot, aes(x = RunningTime..in.ns., color = alg)) + 
+ggplot(tot, aes(x = RunningTime..in.ns./1e9, color = alg)) + 
   stat_ecdf() +
-  xlab("Running Time") +
+  xlab("Running Time (seconds)") +
   ylab("") +
   scale_color_discrete("") +
   scale_y_continuous(labels = percent) +
-  scale_x_continuous(limits = c(0, max(tot$RunningTime..in.ns., na.rm = T))) +
   theme_grey() +
   theme(panel.background = element_blank())
 ggsave("runtime.png")
@@ -27,7 +26,6 @@ ggplot(tot, aes(x = X.States, color = alg)) +
   ylab("") + 
   scale_color_discrete("") +
   scale_y_continuous(labels = percent) +
-  scale_x_continuous(limits = c(0, max(tot$X.States, na.rm=T))) +
   theme_grey() +
   theme(panel.background = element_blank())
 ggsave("states.png")
