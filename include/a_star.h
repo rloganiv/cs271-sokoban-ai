@@ -39,7 +39,7 @@ class AStar {
 		std::vector<Action> path_to_goal;
 
 		// Store the list of nodes to be visited in the frontier
-		std::priority_queue<State_Space, std::vector<State_Space>, CompareState> frontier;
+		//std::priority_queue<State_Space, std::vector<State_Space>, CompareState> frontier;
 
 		// Store the set of visited states
 		std::unordered_map<State, unsigned int, StateHasher> visited;		
