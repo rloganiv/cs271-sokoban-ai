@@ -53,8 +53,8 @@ ida_star_test: ida_star.o state.o problem.o manhattandist.o graph.o heuristic.o 
 ida_star.o:
 	$(CC) $(CFLAGS) $(INCL) -c src/ida_star.cpp -o build/ida_star.o
 
-a_star_test: a_star.o state.o problem.o manhattandist.o graph.o heuristic.o bbsolver.o deadlock.o parameters.o
-	$(CC) $(CFLAGS) $(INCL) -o bin/a_star_test test/a_star_test.cpp build/a_star.o build/state.o build/problem.o build/manhattandist.o build/graph.o build/heuristic.o build/bbsolver.o build/deadlock.o build/parameters.o
+a_star_test: a_star.o state.o problem.o manhattandist.o graph.o heuristic.o bbsolver.o deadlock.o parameters.o simplemanhattandist.o
+	$(CC) $(CFLAGS) $(INCL) -o bin/a_star_test test/a_star_test.cpp build/a_star.o build/state.o build/problem.o build/manhattandist.o build/graph.o build/heuristic.o build/bbsolver.o build/deadlock.o build/parameters.o build/simplemanhattandist.o
 
 a_star.o:
 	$(CC) $(CFLAGS) $(INCL) -c src/a_star.cpp -o build/a_star.o
