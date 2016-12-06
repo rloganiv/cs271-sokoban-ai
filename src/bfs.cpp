@@ -11,6 +11,8 @@
 #include "bfs.h"
 #include <list>
 
+unsigned int num_states = 0;
+
 // Create initial state and goal state objects
 bfs::bfs()
 {
@@ -37,6 +39,7 @@ std::vector<Action> bfs::bfs_begin(State &root, Problem &test_problem)
 	//std::cout << "Check = " << heur.manhattan_dist_score(init_state->current) << std::endl;
 	while(!frontier.empty())
 	{
+		num_states++;
 		auto temp = frontier.front();
 		visiting.push_back(frontier.front());
 		frontier.pop();
@@ -74,6 +77,7 @@ std::vector<Action> bfs::bfs_begin(State &root, Problem &test_problem)
 
 	                        // Reverse the list to get the set of moves from initial state to goal
                         	std::reverse(path_to_goal.begin(), path_to_goal.end());
+				std::cout<<"Number of states visited = "<<num_states<<std::endl;
 	                        return path_to_goal;
 		    	}
 
@@ -83,8 +87,8 @@ std::vector<Action> bfs::bfs_begin(State &root, Problem &test_problem)
 				frontier.push(*next);
 				visited.insert(next->current);
 		   	}
-//			else
-//				std::cout<<"Already in frontier"<<std::endl;
+			//else
+			//	std::cout<<"Already in frontier"<<std::endl;
 
        	}
 
