@@ -14,6 +14,7 @@
 #include <unordered_map>
 
 StateHasher sh;
+unsigned int num_states = 0;
 
 // Temporary heuristic function - to be modified once heuristic classes are finalized
 unsigned int h(State &state, unsigned int f)
@@ -60,7 +61,7 @@ std::vector<Action> ida_star::ida_begin(State &root, Problem &test_problem, Assi
 		{
 			State_Space *traverse = new State_Space;
 			traverse = goal;
-			
+			//goal->current.print();		
 			// Get the set of moves from goal to initial state
 			while(traverse->parent != NULL)
 			{
@@ -70,6 +71,7 @@ std::vector<Action> ida_star::ida_begin(State &root, Problem &test_problem, Assi
 			
 			// Reverse the list to get the set of moves from initial state to goal
 			std::reverse(path_to_goal.begin(), path_to_goal.end());
+			std::cout<<"Number of states visited = "<<num_states<<std::endl;
 			return path_to_goal; 
 		}
 		
@@ -79,7 +81,7 @@ std::vector<Action> ida_star::ida_begin(State &root, Problem &test_problem, Assi
 			return path_to_goal;
 		}
 		bound = result;
-		std::cout<<"Bound = "<<bound<<std::endl;
+		//std::cout<<"Bound = "<<bound<<std::endl;
 		
 	}
 }
@@ -92,12 +94,12 @@ unsigned int ida_star::search(State_Space *state, unsigned int g, Problem &test_
 	//unsigned int f = g + heur.evaluate(state->current); // Manhattan heuristic
 	unsigned int f = g + heur.manhattan_dist_score(state->current);
 	//unsigned int f = g; // UCS
- 	
-	std::cout<<std::endl<<"Heuristic in search = "<<heur.manhattan_dist_score(state->current)<<"; f = "<<f<<std::endl;
+ 	num_states++;
+	//std::cout<<std::endl<<"Heuristic in search = "<<heur.manhattan_dist_score(state->current)<<"; f = "<<f<<std::endl;
 	// Return f if f value is > cutoff bound
-	state->current.print();
+	//state->currentprint();
 	//std::cout<<std::endl;		
-	std::cout<<"Hashing value= "<<sh(state->current)<<std::endl;
+	//std::cout<<"Hashing value= "<<sh(state->current)<<std::endl;
 
 	if(f > bound)
 		return f;
@@ -127,7 +129,7 @@ unsigned int ida_star::search(State_Space *state, unsigned int g, Problem &test_
                         goal = next;
 		unsigned int fnew = g + 1 + heur.manhattan_dist_score(next->current);
 		//if(!visited.count(s))
-		if(!visited.count(s) || (fnew < visited[s]))	
+		if(!visited.count(s) || (fnew < visited[s]))
 		{
 			//visited.insert(next->current);
 			visited[next->current] = fnew;
@@ -137,8 +139,8 @@ unsigned int ida_star::search(State_Space *state, unsigned int g, Problem &test_
 		        if(temp_result < min) // Update bound
         		        min = temp_result;
 		}
-		else
-			std::cout<<"Already visited state"<<std::endl;
+		//else
+		//	std::cout<<"Already visited state"<<std::endl;
         }
 	
 	return min;
